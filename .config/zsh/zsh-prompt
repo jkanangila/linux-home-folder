@@ -4,13 +4,12 @@
 autoload -Uz vcs_info
 autoload -U colors && colors
 
+precmd() { vcs_info }
+
 # enable only git 
 zstyle ':vcs_info:*' enable git 
 
-# setup a hook that runs before every ptompt. 
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
+setopt PROMPT_SUBST
 
 # add a function to check for untracked files in the directory.
 # from https://github.com/zsh-users/zsh/blob/master/Misc/vcs_info-examples
@@ -27,7 +26,7 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:git:*' formats " %{$fg[blue]%}(%{$fg[red]%}%m%u%c%{$fg[yellow]%}%{$fg[magenta]%} %b%{$fg[blue]%})"
 
 # prompt elements
-TIME="(%F{green}%*%f)"
+TIME="${prompt_newline}(%F{green}%*%f)"
 WOR_DIR="%F{blue}%1~%f"
 GIT="$vcs_info_msg_0_ "
 PROMPT_SYMBOL="${prompt_newline}%F{white}-> %f"
