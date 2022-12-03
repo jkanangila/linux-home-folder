@@ -1,0 +1,10 @@
+#!/bin/sh
+
+HISTFILE="$HOME"/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt appendhistory
+
+PATH="$PATH:$HOME/.local/bin:/usr/bin:/usr/local/bin"
+export PATH
+export MANWIDTH=999
