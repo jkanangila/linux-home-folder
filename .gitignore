@@ -1,8 +1,10 @@
 .amplify/
 .android/
+.aws
 .aws/
 .awsCLI/
 .azure/
+.azure
 .cache/
 .config/configstore/
 .config/ls-colors/
