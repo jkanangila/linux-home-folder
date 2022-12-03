@@ -126,3 +126,5 @@ yarn.lock
 .config/nvim/*.x86_64
 .config/nvim/*.hex
 .config/nvim/plugin/packer_compiled.lua
+
+.config/zsh/plugins/
