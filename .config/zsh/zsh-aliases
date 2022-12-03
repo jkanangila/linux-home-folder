@@ -28,3 +28,6 @@ alias list_systemctl="systemctl list-unit-files --state=enabled"
 
 # Neovim with app-image
 alias vim="$HOME"/nvim-appimage/nvim.appimage
+
+# Colorls
+alias lc="colorls -1A --sd"
