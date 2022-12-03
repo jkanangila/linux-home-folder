@@ -16,7 +16,6 @@
 .config/TabNine/
 .config/wslu/
 .config/yarn/
-.config/zsh/
 .config/kglobalshortcutsrc
 .config/starship.toml
 .config/yakuakerc
