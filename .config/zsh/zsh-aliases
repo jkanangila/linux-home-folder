@@ -9,9 +9,9 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 
 # confirm before overwriting something
-alias cp="cp -i"
-alias mv='mv -i'
-alias rm='rm -i'
+alias cp="cp -v"
+alias mv='mv -v'
+alias rm='rm -v'
 
 # easier to read disk
 alias df='df -h'                          # human-readable sizes
@@ -31,3 +31,6 @@ alias vim="$HOME"/nvim-appimage/nvim.appimage
 
 # Colorls
 alias lc="colorls -1A --sd"
+
+# Python
+alias py="python"
