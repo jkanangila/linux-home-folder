@@ -7,14 +7,14 @@ IMAGE="$HOME"/nvim-appimage
 cd $HOME/linux-home-folder
 mkdir -p $HOME/.config
 
-yes | cp -r .config/nvim $CONFIG
+cp -r .config/nvim $CONFIG
 echo "copied vim config"
 
-yes | cp -r .config/zsh $CONFIG
+cp -r .config/zsh $CONFIG
 echo "copied zsh config"
 
-yes | cp -r scripts $HOME
-echo "copied scripts"
+# yes | cp -r scripts $HOME
+# echo "copied scripts"
 
-mkdir -p $IMAGE && yes | cp nvim.appimage $IMAGE
+mkdir -p $IMAGE && nvim.appimage $IMAGE
 echo "copied nvim.appimage"
