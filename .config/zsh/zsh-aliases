@@ -31,3 +31,8 @@ alias vim="$HOME"/nvim-appimage/nvim.appimage
 
 # Colorls
 alias lc="colorls -1A --sd"
+
+# pipenv
+alias p="pipenv"
+alias p-shell="pipenv shell"
+alias p-instal="pipenv install"
