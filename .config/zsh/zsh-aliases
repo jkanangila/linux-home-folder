@@ -34,9 +34,17 @@ alias lc="colorls -1A --sd"
 
 # pipenv
 alias p="pipenv"
-alias p-shell="pipenv shell"
-alias p-instal="pipenv install"
+alias ps="pipenv shell"
+alias pi="pipenv install"
 
 # Python
 alias py="python"
+# Django
+alias drun="python manage.py runserver"
+alias dmake="python manage.py makemigrations"
+alias dmi="python manage.py migrate"
+alias dtest="python manage.py test"
 
+
+# Services
+alias spstart="sudo service postgresql start"
