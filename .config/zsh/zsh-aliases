@@ -47,4 +47,4 @@ alias dtest="python manage.py test"
 
 
 # Services
-alias spstart="sudo service postgresql start"
+alias spst="sudo service postgresql start"
