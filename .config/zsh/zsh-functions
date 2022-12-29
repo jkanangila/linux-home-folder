@@ -22,7 +22,7 @@ function auto_pipenv_shell {
     fi
 }
 
-function cd {
-    builtin cd "$@"
-    auto_pipenv_shell
-}
+# function cd {
+#     builtin cd "$@"
+#     auto_pipenv_shell
+# }
