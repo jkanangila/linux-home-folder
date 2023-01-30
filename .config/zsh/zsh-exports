@@ -8,3 +8,6 @@ setopt appendhistory
 PATH="$PATH:$HOME/.local/bin:/usr/bin:/usr/local/bin"
 export PATH
 export MANWIDTH=999
+
+# NodeVersionManager(NVM)
+source ~/.nvm/nvm.sh

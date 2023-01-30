@@ -16,5 +16,5 @@ echo "copied zsh config"
 # yes | cp -r scripts $HOME
 # echo "copied scripts"
 
-mkdir -p $IMAGE && nvim.appimage $IMAGE
-echo "copied nvim.appimage"
+# mkdir -p $IMAGE && nvim.appimage $IMAGE
+# echo "copied nvim.appimage"
