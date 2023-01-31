@@ -13,6 +13,9 @@ echo "copied vim config"
 cp -r .config/zsh $CONFIG
 echo "copied zsh config"
 
+cp .zshrc $HOME
+echo "copied .zshrc"
+
 # yes | cp -r scripts $HOME
 # echo "copied scripts"
 
