@@ -13,6 +13,7 @@ alias vim="$HOME"/nvim-appimage/nvim.appimage
 
 # Colorls
 alias lc="colorls -1A --sd"
+alias lt="colorls -A --sd --tree=3"
 
 # pipenv
 alias p="pipenv"
@@ -31,4 +32,4 @@ alias dtest="python manage.py test"
 # Services
 alias spst="sudo service postgresql start"
 
-alias cd="cd && auto_pipenv_shell"
+#alias cd="cd && auto_pipenv_shell"
