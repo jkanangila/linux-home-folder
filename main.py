@@ -1,4 +1,4 @@
-from utils import config_parser
+from utils.set_parser import config_parser
 from scripts import resolver
 
 if __name__ == "__main__":
@@ -6,5 +6,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     resolver(args)
-
-    print(args)
