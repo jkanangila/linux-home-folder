@@ -1,0 +1,19 @@
+[MAIN]
+
+load-plugins=pylint_django
+
+[FORMAT]
+max-line-length=79
+
+[MESSAGES CONTROL]
+disable=missing-function-docstring,
+        missing-class-docstring,
+        too-many-ancestors,
+        missing-module-docstring,
+        wrong-import-order
+
+[MISCELLANEOUS]
+notes=FIXME,TODO,NOTE
+
+[SPELLING]
+spelling-dict=en_US

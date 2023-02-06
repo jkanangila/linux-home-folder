@@ -1,0 +1,17 @@
+name = "jkanangila scripts"
+
+version = "0.0.1"
+
+description = "A collection of usefull python scripts."
+
+authors = [
+    "John Mulamba Kanangila <jkanangila@gmail.com>",
+]
+
+maintainers = [
+    "John Mulamba Kanangila <jkanangila@gmail.com>",
+]
+
+[tool.black]
+line-length = 79
+
