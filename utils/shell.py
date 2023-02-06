@@ -1,7 +1,7 @@
 from shutil import which
 import subprocess
 import sys
-from utils.constants import PlatformOptions
+from utils import PlatformOptions
 import distro
 
 

@@ -13,5 +13,5 @@ maintainers = [
 ]
 
 [tool.black]
-line-length = 79
+line-length = 45
 
