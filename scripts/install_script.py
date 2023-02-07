@@ -6,11 +6,16 @@ from utils.shell import (
     is_installed,
     execute_command,
 )
-
+from .setup_script import Setup
 
 class Install(object):
-    def __init__(self, package: str):
+    def __init__(self, package: str, setup: bool):
         self.package = package
+        self.setup = setup
+        self.should_setup = setup
+        
+        if self.should_setup:
+            self.setup = Setup(package)
 
     def run(self):
         (
@@ -23,6 +28,9 @@ class Install(object):
 
         self.check_dependencies()
         self.install_package()
+        
+        if self.should_setup:
+            self.setup.run()
 
     def install_package(self):
         for step in self.steps["steps"]:

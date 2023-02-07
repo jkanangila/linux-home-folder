@@ -1,3 +1,4 @@
 After install:
     * open neovim
-    * Run `:PlugInstall` to install pluggins
+    * Plugin install should be automatic
+    * If there are errors, close neovim and open it again

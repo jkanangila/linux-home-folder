@@ -2,7 +2,7 @@ from pathlib import Path
 from enum import Enum
 
 USER_HOME = Path.home()
-BASE_DIR = Path().resolve().parent.parent
+BASE_DIR = Path().resolve()
 
 
 class PlatformOptions(Enum):
