@@ -17,7 +17,7 @@ INSTALL_STEPS_MAP = {
         "short_name": "nvim",
         "android": {
             "dependencies": [
-                "is_installed('curl')",
+                "curl",
             ],
             "steps": [
                 {
@@ -40,8 +40,8 @@ INSTALL_STEPS_MAP = {
                 },
                 {
                     "echo": "",
-                    "command": f"cat {USER_HOME}/.config/nvim/README.txt"
-                }
+                    "command": f"cat {USER_HOME}/.config/nvim/README.txt",
+                },
             ],
             "source": "https://dev.to/oscarjeremiasdev/how-to-configure-neovim-from-scratch-in-termux-24gl",
         },

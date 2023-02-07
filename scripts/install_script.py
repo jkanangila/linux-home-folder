@@ -6,14 +6,20 @@ from utils.shell import (
     is_installed,
     execute_command,
 )
+from utils.constants.install_steps_map import (
+    install_directive,
+)
 from .setup_script import Setup
 
+
 class Install(object):
-    def __init__(self, package: str, setup: bool):
+    def __init__(
+        self, package: str, setup: bool
+    ):
         self.package = package
         self.setup = setup
         self.should_setup = setup
-        
+
         if self.should_setup:
             self.setup = Setup(package)
 
@@ -21,35 +27,42 @@ class Install(object):
         (
             self.steps,
             self.short_name,
-        ) = self.get_install_directive()
+        ) = self.get_install_directive(
+            self.package
+        )
 
         if self.already_installed():
             return
 
         self.check_dependencies()
-        self.install_package()
-        
+        self.install_package(self.steps)
+
         if self.should_setup:
             self.setup.run()
 
-    def install_package(self):
-        for step in self.steps["steps"]:
+    def install_package(self, steps: list):
+        for step in steps["steps"]:
             print(step["echo"])
             execute_command(step["command"])
 
-    def get_install_directive(self):
+    def get_install_directive(self, package):
         try:
             steps = INSTALL_STEPS_MAP[
-                self.package
+                package
             ][distro]
             short_name = INSTALL_STEPS_MAP[
-                self.package
+                package
             ]["short_name"]
 
         except KeyError:
-            raise KeyError(
-                f"There are no install directive for package {self.package}"
-            )
+            try:
+                steps = INSTALL_STEPS_MAP[
+                    package
+                ]["default"]
+            except KeyError:
+                raise KeyError(
+                    f"There are no install directive for package {package}"
+                )
 
         return steps, short_name
 
@@ -66,7 +79,21 @@ class Install(object):
         for dep in self.steps[
             "dependencies"
         ]:
-            if not eval(dep):
-                raise RuntimeErro(
-                    f"A required dependency ({dep}) is not installed."
+            if not is_installed(dep):
+                print(
+                    f"Could not locate {dep}. Attempting to install"
+                )
+                try:
+                    steps = self.get_install_directive(
+                        dep
+                    )
+                    self.install_package(
+                        steps
+                    )
+                except KeyError:
+                    execute_command(
+                        f"{install_directive} {dep}"
+                    )
+                print(
+                    f"Successfuly installed {dep}"
                 )
