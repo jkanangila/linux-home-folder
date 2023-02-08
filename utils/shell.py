@@ -1,5 +1,4 @@
 from shutil import which
-import subprocess
 import sys
 from .constants.const import PlatformOptions
 
@@ -7,6 +6,8 @@ from .constants.package_manager_map import (
     PACKAGE_MANAGER_MAP,
 )
 import distro
+from subprocess import run, PIPE, Popen
+from shlex import split
 
 
 def get_distro_name() -> str:
@@ -27,13 +28,9 @@ def get_install_directive(
     ]
 
 
-def execute_command(cmd):
-    if type(cmd) == str:
-        subprocess.run(
-            cmd.split(" "), check=True, shell=True
-        )
-    if type(cmd) == list:
-        subprocess.run(cmd, check=True, shell=True)
+def execute_command(cmd: str):
+    command = split(cmd)
+    run(command, check=True)
 
 
 def is_installed(name: str) -> bool:

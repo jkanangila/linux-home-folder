@@ -1,7 +1,7 @@
 from utils.constants.install_steps import (
     INSTALL_INSTRUCTIONS_MAP,
     distro,
-    directive as install_directive
+    directive as install_directive,
 )
 from utils.shell import (
     is_installed,
@@ -45,17 +45,19 @@ class Install(object):
 
     def get_install_directive(self, package):
         steps = INSTALL_INSTRUCTIONS_MAP[
-                    self.package
-                ].get_instructions(distro)
-        short_name = INSTALL_INSTRUCTIONS_MAP[
-            package
-        ].short_name
-        
+            self.package
+        ].get_instructions(distro)
+        short_name = (
+            INSTALL_INSTRUCTIONS_MAP[
+                package
+            ].short_name
+        )
+
         if not steps:
             raise KeyError(
-                f"There are no install directive for package {self.package}"
+                "There are no install directive "
+                f"for package {self.package}"
             )
-            
 
         return steps[0], short_name
 
@@ -72,7 +74,8 @@ class Install(object):
         for dep in self.steps.dependencies:
             if not is_installed(dep):
                 print(
-                    f"Could not locate {dep}. Attempting to install"
+                    f"Could not locate {dep}. "
+                    "Attempting to install"
                 )
                 try:
                     steps = self.get_install_directive(
