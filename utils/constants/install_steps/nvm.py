@@ -21,7 +21,7 @@ def get_nvm(home: str) -> InstallSteps:
                     Command(
                         echo="Install nvm",
                         command=f"bash {home}/install.sh",
-                      ),
+                    ),
                     Command(
                         echo="Delete install script",
                         command=f"rm {home}/install.sh",
