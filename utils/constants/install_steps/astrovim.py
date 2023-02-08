@@ -44,5 +44,5 @@ def get_astrovim(
 post_install = """
     * 'nvim +PackerSync | install pluggins'
     * ':TSIntall <language_to_install>' | instal syntax highlighting with Treesiter
-    * ':LSPInstall' | choose language server
+    * ':LspInstall' | choose language server
 """
