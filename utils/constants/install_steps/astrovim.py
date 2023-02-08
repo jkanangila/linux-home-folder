@@ -30,7 +30,7 @@ def get_astrovim(
                         command=f"git clone https://github.com/AstroNvim/AstroNvim {home}/.config/nvim",
                     ),
                 ],
-                setup: [
+                setup = [
                     Command(
                         echo=post_install,
                         command="",
