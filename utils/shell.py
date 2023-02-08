@@ -6,7 +6,7 @@ from .constants.package_manager_map import (
     PACKAGE_MANAGER_MAP,
 )
 import distro
-from subprocess import run, PIPE, Popen
+from subprocess import run, PIPE, Popen, call
 from shlex import split
 
 
@@ -29,8 +29,11 @@ def get_install_directive(
 
 
 def execute_command(cmd: str):
-    command = split(cmd)
-    run(command, check=True)
+    if cmd:
+        command = split(cmd)
+        Popen(
+            command, stdout=PIPE
+        ).communicate()
 
 
 def is_installed(name: str) -> bool:

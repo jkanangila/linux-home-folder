@@ -78,7 +78,7 @@ class Install(object):
                     "Attempting to install"
                 )
                 try:
-                    steps = self.get_install_directive(
+                    steps, short_name = self.get_install_directive(
                         dep
                     )
                     self.install_package(

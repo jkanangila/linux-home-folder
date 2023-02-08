@@ -5,7 +5,7 @@ from utils.dataclass.steps import (
 )
 
 
-def get_nvm() -> InstallSteps:
+def get_nvm(home: str) -> InstallSteps:
     return InstallSteps(
         package="nvm",
         install_directives=[
@@ -16,20 +16,21 @@ def get_nvm() -> InstallSteps:
                 steps=[
                     Command(
                         echo="Download install script",
-                        command="curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash",
-                
+                        command=f"curl -o {home}/install.sh  https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh",
                     ),
-                    # Command(
-                    #     echo="Install nvm",
-                    #     command="bash install.sh",
-                        
-                    # )
+                    Command(
+                        echo="Install nvm",
+                        command=f"bash {home}/install.sh",
+                      ),
+                    Command(
+                        echo="Delete install script",
+                        command=f"rm {home}/install.sh",
+                    ),
                 ],
                 setup=[
                     Command(
-                        echo="",
-                        command=f"echo {post_install}",
-                        
+                        echo=post_install,
+                        command="",
                     ),
                 ],
             )
@@ -40,5 +41,6 @@ def get_nvm() -> InstallSteps:
 post_install = """Successfuly installed nvm
     
     * Run `python main.py setup zsh`: to copy over zsh config folder;
-    * Navigate to `~/.config/zsh/zsh-exports` and uncomment everything under nvm
+    * Open `~/.config/zsh/zsh-exports` with your favorite editor and uncomment everything under nvm
+    * Run `source ~/.zshrc`
 """

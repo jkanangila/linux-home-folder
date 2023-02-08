@@ -28,11 +28,10 @@ class Setup(object):
         steps = INSTALL_INSTRUCTIONS_MAP[
             self.package
         ].get_instructions(distro)
-        
+
         if not steps:
             raise KeyError(
                 f"There are no install directive for package {self.package}"
             )
-            
 
         return steps[0]

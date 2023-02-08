@@ -36,9 +36,10 @@ class InstallSteps(BaseModel):
         )
         if not instructions:
             return list(
-            filter(
-                lambda x: x.distro == "default",
-                self.install_directives,
+                filter(
+                    lambda x: x.distro
+                    == "default",
+                    self.install_directives,
+                )
             )
-        )
         return instructions
