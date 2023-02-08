@@ -31,11 +31,14 @@ def add_install_parser(script_subparsers):
         action="store_true",
     )
 
+
 def add_setup_parser(script_subparsers):
-    setup_parser = script_subparsers.add_parser(
-        "setup",
-        help="Customize package configs"
+    setup_parser = (
+        script_subparsers.add_parser(
+            "setup",
+            help="Customize package configs",
         )
+    )
     setup_parser.add_argument(
         "package",
         help="Name of package to configure",

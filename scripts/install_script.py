@@ -1,13 +1,11 @@
-from utils.constants.install_steps_map import (
-    INSTALL_STEPS_MAP,
+from utils.constants.install_steps import (
+    INSTALL_INSTRUCTIONS_MAP,
     distro,
+    directive as install_directive
 )
 from utils.shell import (
     is_installed,
     execute_command,
-)
-from utils.constants.install_steps_map import (
-    install_directive,
 )
 from .setup_script import Setup
 
@@ -41,30 +39,25 @@ class Install(object):
             self.setup.run()
 
     def install_package(self, steps: list):
-        for step in steps["steps"]:
-            print(step["echo"])
-            execute_command(step["command"])
+        for step in steps.steps:
+            print(step.echo)
+            execute_command(step.command)
 
     def get_install_directive(self, package):
-        try:
-            steps = INSTALL_STEPS_MAP[
-                package
-            ][distro]
-            short_name = INSTALL_STEPS_MAP[
-                package
-            ]["short_name"]
+        steps = INSTALL_INSTRUCTIONS_MAP[
+                    self.package
+                ].get_instructions(distro)
+        short_name = INSTALL_INSTRUCTIONS_MAP[
+            package
+        ].short_name
+        
+        if not steps:
+            raise KeyError(
+                f"There are no install directive for package {self.package}"
+            )
+            
 
-        except KeyError:
-            try:
-                steps = INSTALL_STEPS_MAP[
-                    package
-                ]["default"]
-            except KeyError:
-                raise KeyError(
-                    f"There are no install directive for package {package}"
-                )
-
-        return steps, short_name
+        return steps[0], short_name
 
     def already_installed(self):
         if is_installed(
@@ -76,9 +69,7 @@ class Install(object):
             return True
 
     def check_dependencies(self):
-        for dep in self.steps[
-            "dependencies"
-        ]:
+        for dep in self.steps.dependencies:
             if not is_installed(dep):
                 print(
                     f"Could not locate {dep}. Attempting to install"

@@ -10,28 +10,26 @@ def get_nvm() -> InstallSteps:
         package="nvm",
         install_directives=[
             InstallDirective(
-                disto="default",
+                distro="default",
                 dependencies=["curl"],
                 source="https://github.com/nvm-sh/nvm#install--update-script",
                 steps=[
                     Command(
-                        echo="Install nvm",
-                        command=[
-                            "curl",
-                            "-o-",
-                            "'https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh'",
-                            "|",
-                            "bash",
-                        ],
-                    )
+                        echo="Download install script",
+                        command="curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash",
+                
+                    ),
+                    # Command(
+                    #     echo="Install nvm",
+                    #     command="bash install.sh",
+                        
+                    # )
                 ],
                 setup=[
                     Command(
                         echo="",
-                        command=[
-                            "echo",
-                            post_install,
-                        ],
+                        command=f"echo {post_install}",
+                        
                     ),
                 ],
             )

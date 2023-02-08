@@ -1,5 +1,5 @@
-from utils.constants.install_steps_map import (
-    INSTALL_STEPS_MAP,
+from utils.constants.install_steps import (
+    INSTALL_INSTRUCTIONS_MAP,
     distro,
 )
 from utils.shell import (
@@ -20,19 +20,19 @@ class Setup(object):
         self.setup_package()
 
     def setup_package(self):
-        for step in self.steps["setup"]:
-            print(step["echo"])
-            execute_command(step["command"])
+        for step in self.steps.setup:
+            print(step.echo)
+            execute_command(step.command)
 
     def get_install_directive(self):
-        try:
-            steps = INSTALL_STEPS_MAP[
-                self.package
-            ][distro]
-
-        except KeyError:
+        steps = INSTALL_INSTRUCTIONS_MAP[
+            self.package
+        ].get_instructions(distro)
+        
+        if not steps:
             raise KeyError(
                 f"There are no install directive for package {self.package}"
             )
+            
 
-        return steps
+        return steps[0]

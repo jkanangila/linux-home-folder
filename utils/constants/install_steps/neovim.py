@@ -16,7 +16,7 @@ def get_neovim(
         short_name="nvim",
         install_directives=[
             InstallDirective(
-                disto="android",
+                distro="android",
                 dependencies=["curl"],
                 source="https://dev.to/oscarjeremiasdev/how-to-configure-neovim-from-scratch-in-termux-24gl",
                 steps=[
@@ -43,6 +43,6 @@ def get_neovim(
                         command=f"cat {home}/.config/nvim/README.txt",
                     ),
                 ],
-            )
+            ),
         ],
     )

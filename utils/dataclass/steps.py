@@ -13,10 +13,10 @@ class Command(BaseModel):
 
 
 class InstallDirective(BaseModel):
-    disto: str = "default"
+    distro: str = "default"
     dependencies: List[str]
     steps: List[Command]
-    setup: Optional[List[Command]] = None
+    setup: Optional[List[Command]] = []
     source: str = ""
 
 
@@ -26,3 +26,19 @@ class InstallSteps(BaseModel):
     install_directives: List[
         InstallDirective
     ]
+
+    def get_instructions(self, distro):
+        instructions = list(
+            filter(
+                lambda x: x.distro == distro,
+                self.install_directives,
+            )
+        )
+        if not instructions:
+            return list(
+            filter(
+                lambda x: x.distro == "default",
+                self.install_directives,
+            )
+        )
+        return instructions

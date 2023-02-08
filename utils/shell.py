@@ -30,10 +30,10 @@ def get_install_directive(
 def execute_command(cmd):
     if type(cmd) == str:
         subprocess.run(
-            cmd.split(" "), check=True
+            cmd.split(" "), check=True, shell=True
         )
     if type(cmd) == list:
-        subprocess.run(cmd, check=True)
+        subprocess.run(cmd, check=True, shell=True)
 
 
 def is_installed(name: str) -> bool:
