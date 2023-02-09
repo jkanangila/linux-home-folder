@@ -11,7 +11,7 @@ def get_zsh(
     config_src = f"{base_dir}/.config/zsh"
     config_dest = f"{home}/.config"
     zshrc = f"{base_dir}/.zshrc"
-    
+
     return InstallSteps(
         package="zsh",
         install_directives=[
@@ -39,10 +39,11 @@ def get_zsh(
                         command=f"cp {zshrc} {home}",
                     ),
                     Command(
-                        echo="Run `source ~/.zshrc~",
+                        echo="Run `source ~/.zshrc`",
                         command=""
                     )
                 ],
             )
         ],
     )
+
