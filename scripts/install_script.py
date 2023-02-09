@@ -1,12 +1,8 @@
-from utils.constants.install_steps import (
-    INSTALL_INSTRUCTIONS_MAP,
-    distro,
-    directive as install_directive,
-)
-from utils.shell import (
-    is_installed,
-    execute_command,
-)
+from utils.constants.install_steps import INSTALL_INSTRUCTIONS_MAP
+from utils.constants.install_steps import directive as install_directive
+from utils.constants.install_steps import distro
+from utils.shell import execute_command_shell, is_installed
+
 from .setup_script import Setup
 
 
@@ -41,7 +37,7 @@ class Install(object):
     def install_package(self, steps: list):
         for step in steps.steps:
             print(step.echo)
-            execute_command(step.command)
+            execute_command_shell(step.command)
 
     def get_install_directive(self, package):
         steps = INSTALL_INSTRUCTIONS_MAP[
