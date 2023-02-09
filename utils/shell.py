@@ -36,5 +36,10 @@ def execute_command(cmd: str):
         ).communicate()
 
 
+def execute_command_shell(cmd: str):
+    if cmd:
+        run(cmd, shell=True)
+
+
 def is_installed(name: str) -> bool:
     return which(name) is not None
