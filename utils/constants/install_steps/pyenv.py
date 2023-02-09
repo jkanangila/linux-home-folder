@@ -9,11 +9,11 @@ def get_pyenv(
         install_directives=[
             InstallDirective(
                 distro="default",
-                dependencies=[],
+                dependencies=["https://github.com/pyenv/pyenv-installer"],
                 source="",
                 steps=[
                     Command(
-                        echo="Install zsh",
+                        echo="",
                         command="curl https://pyenv.run | bash"
                     )
                 ],
