@@ -33,3 +33,6 @@ alias dtest="python manage.py test"
 alias spst="sudo service postgresql start"
 
 #alias cd="cd && auto_pipenv_shell"
+
+# clear command
+alias cl="clear"
