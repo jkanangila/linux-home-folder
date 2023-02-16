@@ -11,7 +11,6 @@ unsetopt BEEP
 
 # completions
 autoload -Uz compinit promptinit
-zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zmodload zsh/complist
 compinit
