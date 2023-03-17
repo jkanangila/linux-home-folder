@@ -3,6 +3,10 @@ PACKAGE_MANAGER_MAP = {
         "package_manager": "apt",
         "install_directive": "apt-get install",
     },
+    "linuxmint": {
+        "package_manager": "apt",
+        "install_directive": "apt-get install",
+    },
     "android": {
         "package_manager": "pkg",
         "install_directive": "pkg install",
