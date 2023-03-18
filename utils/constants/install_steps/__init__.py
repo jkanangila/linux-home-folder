@@ -1,7 +1,14 @@
-from utils.constants.const import BASE_DIR, USER_HOME
-from utils.shell import get_distro_name, get_install_directive
+from utils.constants.const import (
+    BASE_DIR,
+    USER_HOME,
+)
+from utils.shell import (
+    get_distro_name,
+    get_install_directive,
+)
 
 from .astrovim import get_astrovim
+from .git_ssh import get_git_ssh
 from .neovim import get_neovim
 from .node import get_node
 from .nvm import get_nvm
@@ -12,7 +19,10 @@ distro = get_distro_name()
 directive = get_install_directive(distro)
 
 INSTALL_INSTRUCTIONS_MAP = {
-    "astrovim": get_astrovim(home=USER_HOME,),
+    "astrovim": get_astrovim(
+        home=USER_HOME,
+    ),
+    "git_ssh": get_git_ssh(),
     "neovim": get_neovim(
         install=directive,
         home=USER_HOME,
@@ -22,11 +32,13 @@ INSTALL_INSTRUCTIONS_MAP = {
     "nvm": get_nvm(
         home=USER_HOME,
     ),
-    "node": get_node(install=directive,),
+    "node": get_node(
+        install=directive,
+    ),
     "pyenv": get_pyenv(),
     "zsh": get_zsh(
         install=directive,
         home=USER_HOME,
         base_dir=BASE_DIR,
-    )
+    ),
 }
