@@ -1,3 +1,4 @@
+from utils.constants.const import BASE_DIR
 from utils.dataclass.steps import (
     Command,
     InstallDirective,
@@ -21,36 +22,39 @@ def get_zsh(
                 source="",
                 steps=[
                     Command(
-                        echo=f"Installing zsh using `{install}`...",
-                        command=f"{install} zsh",
-                    )
+                        echo=f"",
+                        command=(
+                            f"export INSTALL={install} && "
+                            + f"export CONFIG_DEST={config_dest} && "
+                            + f"export CONFIG_SRC={config_src} && "
+                            + f"export ZSHRC={zshrc} && "
+                            + f"bash {BASE_DIR / 'scripts' / 'sh' / 'install-zsh.sh'}"
+                        ),
+                    ),
                 ],
                 setup=[
                     Command(
-                        echo="Creating config directory...",
-                        command=f"mkdir -p {config_dest}",
+                        echo=f"",
+                        command=(
+                            f"export INSTALL={install} && "
+                            + f"export CONFIG_DEST={config_dest} && "
+                            + f"export CONFIG_SRC={config_src} && "
+                            + f"export ZSHRC={zshrc} && "
+                            + f"bash {BASE_DIR / 'scripts' / 'sh' / 'install-zsh.sh'}"
+                        ),
                     ),
                     Command(
-                        echo="Copying zsh config folder...",
-                        command=f"cp -r {config_src} {config_dest}",
-                    ),
-                    Command(
-                        echo="Copying .zshrc file...",
-                        command=f"cp {zshrc} {home}",
-                    ),
-                    Command(
-                        echo="Run `source ~/.zshrc`",
-                        command="",
-                    ),
-                    Command(
-                        echo="Run `sudo usermod --shell $(which zsh) $USER` to make zsh the default shell",
-                        command="",
-                    ),
-                    Command(
-                        echo="Remember to change your terminal font to a powerline font after sourcing the `,zshrc` file",
+                        echo=post_install,
                         command="",
                     ),
                 ],
             )
         ],
     )
+
+
+post_install = """
+POST INSTALL
+1. Run `sudo usermod --shell $(which zsh) $USER` to make zsh the default shell
+2. Remember to change your terminal font to a powerline font after sourcing the `,zshrc` file
+"""

@@ -7,9 +7,6 @@ from utils.dataclass.steps import (
 
 def get_neovim(
     install: str,
-    home: str,
-    base_dir: str,
-    distro: str,
 ) -> InstallSteps:
     return InstallSteps(
         package="neovim",
@@ -25,24 +22,7 @@ def get_neovim(
                         command=f"{install} neovim",
                     )
                 ],
-                setup=[
-                    Command(
-                        echo="Clear directory if present",
-                        command=f"rm -rf {home}/.config/nvim",
-                    ),
-                    Command(
-                        echo="Create config directory",
-                        command=f"mkdir -p {home}/.config/nvim",
-                    ),
-                    Command(
-                        echo="Copy config",
-                        command=f"cp -R {base_dir}/.config/nvim/{distro}/. {home}/.config/nvim",
-                    ),
-                    Command(
-                        echo="",
-                        command=f"cat {home}/.config/nvim/README.txt",
-                    ),
-                ],
+                setup=[],
             ),
             InstallDirective(
                 distro="default",
@@ -51,7 +31,7 @@ def get_neovim(
                 steps=[
                     Command(
                         echo="Install neovim",
-                        command=f"{install} neovim",
+                        command=f"sudo {install} neovim",
                     )
                 ],
                 setup=[],

@@ -1,11 +1,12 @@
+from utils.constants.const import BASE_DIR
 from utils.dataclass.steps import (
+    Command,
     InstallDirective,
     InstallSteps,
-    Command,
 )
 
 
-def get_nvm(home: str) -> InstallSteps:
+def get_nvm() -> InstallSteps:
     return InstallSteps(
         package="nvm",
         install_directives=[
@@ -15,16 +16,8 @@ def get_nvm(home: str) -> InstallSteps:
                 source="https://github.com/nvm-sh/nvm#install--update-script",
                 steps=[
                     Command(
-                        echo="Download install script",
-                        command=f"curl -o {home}/install.sh  https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh",
-                    ),
-                    Command(
-                        echo="Install nvm",
-                        command=f"bash {home}/install.sh",
-                    ),
-                    Command(
-                        echo="Delete install script",
-                        command=f"rm {home}/install.sh",
+                        echo="",
+                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'install-nvm.sh'}",
                     ),
                 ],
                 setup=[

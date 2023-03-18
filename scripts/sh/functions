@@ -1,0 +1,9 @@
+function isinstalled() {
+    PACKAGE_NAME=$(echo $1 | cut -d "/" -f 2)
+
+    if ! package="$(type -p $PACKAGE_NAME)" || [[ -z $package ]]; then
+        echo false
+    else
+        echo true
+    fi
+}
