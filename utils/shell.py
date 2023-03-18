@@ -1,13 +1,14 @@
-from shutil import which
 import sys
-from .constants.const import PlatformOptions
+from shlex import split
+from shutil import which
+from subprocess import PIPE, Popen, call, run
 
+import distro
+
+from .constants.const import PlatformOptions
 from .constants.package_manager_map import (
     PACKAGE_MANAGER_MAP,
 )
-import distro
-from subprocess import run, PIPE, Popen, call
-from shlex import split
 
 
 def get_distro_name() -> str:
@@ -38,7 +39,11 @@ def execute_command(cmd: str):
 
 def execute_command_shell(cmd: str):
     if cmd:
-        run(cmd, shell=True)
+        run(
+            cmd,
+            shell=True,
+            check=True,
+        )
 
 
 def is_installed(name: str) -> bool:

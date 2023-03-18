@@ -1,20 +1,17 @@
 from utils.dataclass.steps import (
+    Command,
     InstallDirective,
     InstallSteps,
-    Command,
 )
 
-VERSION = "16.14.1"
 
-
-# TODO make node version dynamic
 def get_node(install: str) -> InstallSteps:
     return InstallSteps(
         package="node",
         install_directives=[
             InstallDirective(
                 distro="android",
-                dependencies=["nvm"],
+                dependencies=[],
                 source="https://github.com/nvm-sh/nvm#install--update-script",
                 steps=[
                     Command(
@@ -29,12 +26,12 @@ def get_node(install: str) -> InstallSteps:
             ),
             InstallDirective(
                 distro="default",
-                dependencies=["nvm"],
+                dependencies=[],
                 source="https://github.com/nvm-sh/nvm#install--update-script",
                 steps=[
                     Command(
                         echo="Installing node",
-                        command=f"nvm install node {VERSION}",
+                        command=f"nvm install node --lts",
                     ),
                     Command(
                         echo="Installing yarn",
@@ -44,9 +41,9 @@ def get_node(install: str) -> InstallSteps:
                 setup=[
                     Command(
                         echo="Setting default node version",
-                        command=f"nvm use {VERSION}",
+                        command=f"nvm use --lts",
                     )
                 ],
-            )
+            ),
         ],
     )

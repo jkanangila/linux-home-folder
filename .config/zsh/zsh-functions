@@ -5,12 +5,35 @@ function zsh_add_file() {
 
 function zsh_add_plugin() {
     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
-    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
+    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
         # For plugins
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" ||
+            zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
         git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+    fi
+}
+
+function zsh_add_starship_prompt() {
+    if [ -d "$HOME/.zsh/spaceship" ]; then
+        source "$HOME/.zsh/spaceship/spaceship.zsh"
+    else
+        git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git "$HOME/.zsh/spaceship"
+    fi
+}
+
+function zsh_add_powerline_fonts() {
+    if [ -d "$HOME/.local/share/fonts" ]; then
+        echo ""
+    else
+        # clone
+        git clone https://github.com/powerline/fonts.git --depth=1
+        # install
+        cd fonts
+        ./install.sh
+        # clean-up a bit
+        cd ..
+        rm -rf fonts
     fi
 }
 

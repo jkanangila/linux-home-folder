@@ -1,7 +1,7 @@
 from utils.dataclass.steps import (
+    Command,
     InstallDirective,
     InstallSteps,
-    Command,
 )
 
 
@@ -43,6 +43,18 @@ def get_neovim(
                         command=f"cat {home}/.config/nvim/README.txt",
                     ),
                 ],
+            ),
+            InstallDirective(
+                distro="default",
+                dependencies=[],
+                source="",
+                steps=[
+                    Command(
+                        echo="Install neovim",
+                        command=f"{install} neovim",
+                    )
+                ],
+                setup=[],
             ),
         ],
     )

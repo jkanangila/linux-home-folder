@@ -5,7 +5,7 @@ PACKAGE_MANAGER_MAP = {
     },
     "linuxmint": {
         "package_manager": "apt",
-        "install_directive": "apt-get install",
+        "install_directive": "apt install",
     },
     "android": {
         "package_manager": "pkg",

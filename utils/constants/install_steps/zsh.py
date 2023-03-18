@@ -1,7 +1,7 @@
 from utils.dataclass.steps import (
+    Command,
     InstallDirective,
     InstallSteps,
-    Command,
 )
 
 
@@ -21,29 +21,36 @@ def get_zsh(
                 source="",
                 steps=[
                     Command(
-                        echo="Install zsh",
+                        echo=f"Installing zsh using `{install}`...",
                         command=f"{install} zsh",
                     )
                 ],
                 setup=[
                     Command(
-                        echo="Create config directory",
+                        echo="Creating config directory...",
                         command=f"mkdir -p {config_dest}",
                     ),
                     Command(
-                        echo="Copy config folder",
+                        echo="Copying zsh config folder...",
                         command=f"cp -r {config_src} {config_dest}",
                     ),
                     Command(
-                        echo="Copy zshrc",
+                        echo="Copying .zshrc file...",
                         command=f"cp {zshrc} {home}",
                     ),
                     Command(
                         echo="Run `source ~/.zshrc`",
-                        command=""
-                    )
+                        command="",
+                    ),
+                    Command(
+                        echo="Run `sudo usermod --shell $(which zsh) $USER` to make zsh the default shell",
+                        command="",
+                    ),
+                    Command(
+                        echo="Remember to change your terminal font to a powerline font after sourcing the `,zshrc` file",
+                        command="",
+                    ),
                 ],
             )
         ],
     )
-
