@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# -------------------------- Source functions files -------------------------- #
+# ------------------------- Source external functions ------------------------ #
 . "scripts/sh/functions"
 
 # ----------------------------- install astrovim ----------------------------- #

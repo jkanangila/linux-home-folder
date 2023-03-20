@@ -1,40 +1,45 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
-# ----------------------------- Define variables ----------------------------- #
+# ------------------------- Source external functions ------------------------ #
+. "scripts/sh/functions"
+
+# --------------------------------- Variables -------------------------------- #
+PRIVATE_KEY="$HOME/.ssh/id_ed25519"
+PUBLIC_KEY="$HOME/.ssh/id_ed25519.pub"
+
 CONFIG_FILE="$HOME/.ssh/config"
 CONFIG_TEXT="
 Host *
     AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519"
+    IdentityFile $PRIVATE_KEY"
 
-# ---------------------------- Generating key file --------------------------- #
-echo "Generating key file..."
-echo "NOTE: Press enter to save key in default location"
-echo "NOTE: Password can be empty"
-ssh-keygen -t ed25519 -C jkanangila@gmail.com
+# --------------------------------- Functions -------------------------------- #
+function generate_ssh_key() {
+    echo "Generating key file..."
+    ssh-keygen -t ed25519 -C jkanangila@gmail.com -N "" -f "$PRIVATE_KEY"
+}
 
-# ------------------------ Adding keyfile to ssh agent ----------------------- #
-echo "Adding keyfile to ssh agent..."
-eval "$(ssh-agent -s)"
+function echo_post_install() {
+    SSH_KEY=$(cat $PUBLIC_KEY)
 
-if [ -d $CONFIG_FILE ]; then
-    echo "$CONFIG_TEXT" >>$CONFIG_FILE
+    echo "
+    Complete the setup
+
+    1. Open the following link in your browser: https://github.com/settings/ssh/new
+    2. Enter a meaningfull name in the 'Title' field
+    3. Past the following text in the 'Key' field:
+        $SSH_KEY
+    4. Click: Add SSH key
+    "
+}
+
+# ----------------------------------- MAIN ----------------------------------- #
+if [ -f $PRIVATE_KEY ] && [ -f $PUBLIC_KEY ]; then
+    echo_post_install
 else
-    touch $CONFIG_FILE
-    echo "$CONFIG_TEXT" >>$CONFIG_FILE
+    generate_ssh_key
+
+    add_key_to_ssh_agent $CONFIG_TEXT $PRIVATE_KEY
+
+    echo_post_install
 fi
-
-ssh-add ~/.ssh/id_ed25519
-
-# ------------------------------ Complete setup ------------------------------ #
-SSH_KEY=$(cat ~/.ssh/id_ed25519.pub)
-
-echo "
-Complete the setup
-
-1. Go to your: https://github.com/settings/ssh/new
-2. Enter a meaningfull name in the $(Title) field
-3. Past the following text in the $(Key) field:
-    $SSH_KEY
-4. Click: Add SSH key
-"

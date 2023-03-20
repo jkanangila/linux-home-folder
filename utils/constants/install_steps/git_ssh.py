@@ -19,7 +19,7 @@ def get_git_ssh() -> InstallSteps:
                 setup=[
                     Command(
                         echo=f"",
-                        command=f"sh {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-git.sh'}",
+                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-git.sh'}",
                     ),
                 ],
             ),
