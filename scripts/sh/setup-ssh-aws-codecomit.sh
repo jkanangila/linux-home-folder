@@ -28,6 +28,8 @@ add_key_to_aws_instructions() {
 3. On the user details page, choose the Security Credentials tab, and then choose Upload SSH public key.
 4. Paste the following into the field, and then choose Upload SSH public key.
     $KEY_CONTENT
-5. Copy or save the information in SSH Key ID 
+5. Copy or save the information in SSH Key ID
 "
+
+    read -p "Enter your AWS_SSH_KEY_ID (Get it from your IAM console): " AWS_SSH_KEY_ID
 }
