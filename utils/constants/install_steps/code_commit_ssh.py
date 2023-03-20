@@ -6,25 +6,25 @@ from utils.dataclass.steps import (
 )
 
 
-def get_git_ssh() -> InstallSteps:
+def get_code_commit_ssh() -> InstallSteps:
     return InstallSteps(
-        package="git_ssh",
+        package="code_commit_ssh",
         short_name="",
         install_directives=[
             InstallDirective(
                 distro="default",
-                dependencies=["git"],
+                dependencies=[],
                 source="",
                 steps=[
                     Command(
                         echo=f"",
-                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-git.sh'}",
+                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-aws-codecommit.sh'}",
                     ),
                 ],
                 setup=[
                     Command(
                         echo=f"",
-                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-git.sh'}",
+                        command=f"bash {BASE_DIR / 'scripts' / 'sh' / 'setup-ssh-aws-codecommit.sh'}",
                     ),
                 ],
             ),

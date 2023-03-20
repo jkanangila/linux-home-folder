@@ -8,6 +8,9 @@ from utils.shell import (
 )
 
 from .astrovim import get_astrovim
+from .code_commit_ssh import (
+    get_code_commit_ssh,
+)
 from .colorls import get_colorls
 from .git_ssh import get_git_ssh
 from .neovim import get_neovim
@@ -21,6 +24,7 @@ directive = get_install_directive(distro)
 
 INSTALL_INSTRUCTIONS_MAP = {
     "astrovim": get_astrovim(),
+    "code_commit_ssh": get_code_commit_ssh(),
     "colorls": get_colorls(
         install=directive
     ),
