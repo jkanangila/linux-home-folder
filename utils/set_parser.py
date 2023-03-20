@@ -8,10 +8,18 @@ def config_parser():
         parser.add_subparsers(dest="script")
     )
 
+    add_ls_parser(script_subparsers)
     add_install_parser(script_subparsers)
     add_setup_parser(script_subparsers)
 
     return parser
+
+
+def add_ls_parser(script_subparsers):
+    script_subparsers.add_parser(
+        "ls",
+        help="Returns a list of packages whose installation are supported",
+    )
 
 
 def add_install_parser(script_subparsers):
