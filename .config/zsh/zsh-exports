@@ -24,3 +24,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # load nvm bash_completion
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+##########
+# PIPENV #
+##########
+# Tell pipenv to create virtualenvs in the project directory instead of a central location.
+export PIPENV_VENV_IN_PROJECT=1
