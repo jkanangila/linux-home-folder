@@ -3,7 +3,7 @@
 -- @param version (optional string): The specific version tag to download (e.g., "0.10.2").
 function install_bottom_for_termux(version)
     -- Fallback to a default stable version if no argument is provided
-    version = version or "0.10.3"
+    version = version or "0.12.3"
 
     print("[*] Updating Termux packages...")
     os.execute("pkg update && pkg upgrade -y")
@@ -12,7 +12,7 @@ function install_bottom_for_termux(version)
     os.execute("pkg install curl tar -y")
 
     -- Static configuration targeting standard 64-bit Termux2
-    -- 
+    -- https://github.com/ClementTsang/bottom/releases/download/0.12.3/bottom_aarch64-linux-android.tar.gz
     local tar_file = "bottom_aarch64-linux-android.tar.gz"
     local download_url = string.format("https://github.com/ClementTsang/bottom/releases/download/%s/bottom_aarch64-linux-android.tar.gz", version)
 
@@ -36,3 +36,6 @@ function install_bottom_for_termux(version)
 
     print("[+] Success! Type 'btm' in your Termux terminal to run it.")
     return true
+end
+
+install_bottom_for_termux()
