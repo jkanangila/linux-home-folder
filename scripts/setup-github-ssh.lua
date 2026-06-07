@@ -111,28 +111,69 @@ end
 local function display_instructions()
     local pub_key_text = read_file(public_key)
     if pub_key_text == "" then
-        print("Error: Public key missing.")
+        print("\27[31mError: Public key file missing. Cannot display instructions.\27[0m")
         return
     end
 
-    -- Trim trailing whitespace and newlines
+    -- Trim trailing whitespace and newlines cleanly
     pub_key_text = string.gsub(pub_key_text, "%s+$", "")
 
-    print("\n" .. string.rep("=", 60))
-    print(string.format("%s", " SETUP COMPLETE — NEXT STEPS "):gsub("^%s*(.-)%s*$", function(c) 
-        local pad = math.floor((60 - #c) / 2)
-        return string.rep("-", pad) .. c .. string.rep("-", pad)
+    -- Visual framing layouts
+    local width = 75
+    local border = string.rep("=", width)
+    local divider = string.rep("-", width)
+
+    -- Formatting helper for titles
+    local function print_header(title)
+        local pad = math.floor((width - #title) / 2)
+        print(string.rep("-", pad) .. " " .. title .. " " .. string.rep("-", width - pad - #title - 2))
+    end
+
+    print("\n" .. border)
+    print(string.format("%s", " SSH SETUP SUCCESSFUL — FINAL STEPS REQUIRED "):gsub("^%s*(.-)%s*$", function(c) 
+        local pad = math.floor((width - #c) / 2)
+        return string.rep(" ", pad) .. c .. string.rep(" ", pad)
     end))
-    print(string.rep("=", 60))
-    
-    -- Uses standard ANSI codes for green text output for the key block
-    print("\n1. Copy your public key below:\n")
-    print("\27[32m" .. pub_key_text .. "\27[0m")
-    print("\n2. Open this link in your browser:")
-    print("   https://github.com/settings/ssh/new")
-    print("\n3. Paste the key, give it a Title, and save.")
-    print(string.rep("=", 60) .. "\n")
+    print(border .. "\n")
+
+    print_header("1. ADD KEY TO GITHUB")
+    print("  A. Copy your public key block below (highlight everything in green):")
+    print("\n\27[32m" .. pub_key_text .. "\27[0m\n")
+    print("  B. Open this URL in your browser:")
+    print("     \27[36mhttps://github.com/settings/ssh/new\27[0m")
+    print("  C. Give it a meaningful 'Title' (e.g., 'Work Laptop - Ubuntu')")
+    print("  D. Keep the Key type as 'Authentication Key'")
+    print("  E. Paste the green text into the 'Key' field and click 'Add SSH Key'")
+    print("\n" .. divider)
+
+    print_header("2. VERIFY YOUR CONNECTION")
+    print("  Once added, test that it works by running this in your terminal:")
+    print("\n     \27[33mssh -T git@github.com\27[0m\n")
+    print("  * You should see: 'Hi " .. email:match("([^@]+)") .. "! You've successfully authenticated...'")
+    print("  * If asked to continue connecting (yes/no), type \27[1myes\27[0m and press Enter.")
+    print("\n" .. divider)
+
+    print_header("3. UPDATE EXISTING LOCAL REPOSITORIES TO USE SSH")
+    print("  If you have existing projects currently cloned via HTTPS, they will still")
+    print("  ask for a password/token. Run these commands inside those project folders:")
+    print("\n  A. Check your current remote URL:")
+    print("     \27[33mgit remote -v\27[0m")
+    print("     (If it starts with 'https://github.com/...', it needs updating)")
+    print("\n  B. Switch the remote URL from HTTPS to SSH:")
+    print("     \27[33mgit remote set-url origin git@github.com:USERNAME/REPOSITORY.git\27[0m")
+    print("     *(Replace USERNAME/REPOSITORY with your actual GitHub project path)*")
+    print("\n  C. Verify the change was successful:")
+    print("     \27[33mgit remote -v\27[0m")
+    print("     (It should now read: git@github.com:...)")
+    print("\n" .. divider)
+
+    print_header("4. RECOMMENDED GLOBAL GIT CONFIGURATION")
+    print("  Ensure your local git commits point cleanly to this email address:")
+    print(string.format("\n     git config --global user.email \"%s\"", email))
+    print("     git config --global user.name \"Your Name\"\n")
+    print(border .. "\n")
 end
+
 
 -- ----------------------------------- MAIN ----------------------------------- --
 setup_ssh_directory()
