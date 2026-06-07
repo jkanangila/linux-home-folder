@@ -41,5 +41,4 @@ function install_gdu_in_termux()
 end
 
 -- Example execution:
--- install_gdu_in_termux()
-
+install_gdu_in_termux()
