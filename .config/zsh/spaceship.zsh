@@ -3,7 +3,11 @@ SPACESHIP_DIR_TRUNC=true
 SPACESHIP_DIR_TRUNC=1
 SPACESHIP_DIR_TRUNC_PREFIX=""
 
-SPACESHIP_PROMPT_ADD_NEWLINE=false # remove new line character before prompt line
+# Disable Async Rendering
+# SPACESHIP_PROMPT_ASYNC=false
+
+# remove new line character before prompt line
+SPACESHIP_PROMPT_ADD_NEWLINE=false 
 
 # Exit code
 SPACESHIP_EXIT_CODE_SHOW=true

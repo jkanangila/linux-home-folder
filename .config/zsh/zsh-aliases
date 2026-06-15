@@ -1,38 +1,55 @@
 #!/bin/sh
 
-alias ls='ls --color=auto'
+alias ls='lsd -a --group-directories-first'
 alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
+alias reload="source ~/.zshrc"
 
-# confirm before overwriting something
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │           confirm before overwriting something           │
+#          ╰──────────────────────────────────────────────────────────╯
 alias cp="cp -v"
 alias mv='mv -v'
 alias rm='rm -v'
 
-# Neovim with app-image
-alias vim="$HOME"/nvim-appimage/nvim.appimage
 
-# Colorls
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                         Colorls                          │
+#          ╰──────────────────────────────────────────────────────────╯
 alias lc="colorls -1A --sd"
 alias lt="colorls -A --sd --tree=3"
 
-# pipenv
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                          pipenv                          │
+#          ╰──────────────────────────────────────────────────────────╯
 alias p="pipenv"
 alias ps="pipenv shell"
 alias pi="pipenv install"
 
-# Python
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                          Python                          │
+#          ╰──────────────────────────────────────────────────────────╯
 alias py="python"
-# Django
+
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                          Django                          │
+#          ╰──────────────────────────────────────────────────────────╯
 alias drun="python manage.py runserver"
 alias dmake="python manage.py makemigrations"
 alias dmi="python manage.py migrate"
 alias dtest="python manage.py test"
 
 
-# Services
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                         Services                         │
+#          ╰──────────────────────────────────────────────────────────╯
 alias spst="sudo service postgresql start"
 
-#alias cd="cd && auto_pipenv_shell"
 
-# clear command
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                      clear command                       │
+#          ╰──────────────────────────────────────────────────────────╯
 alias cl="clear"
