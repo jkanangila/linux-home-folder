@@ -5,4 +5,8 @@
 __pycache__/
 
 Pipfile.lock
-playground/
+playground
+
+zsh/.config/zsh/plugins/
+zsh/.config/zsh/.zcompdump
+zsh/.config/zsh/.zshenv
