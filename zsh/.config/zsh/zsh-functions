@@ -1,0 +1,127 @@
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │    ZSH CONFIGURATION MANAGEMENT & AUTOMATION TOOLKIT     │
+#          ╰──────────────────────────────────────────────────────────╯
+
+# ╭──────────────────────────────────────────────────────────╮
+# │ 1. PLUGIN MANAGEMENT FUNCTIONS                           │
+# ╰──────────────────────────────────────────────────────────╯
+
+# Safely sources a configuration file if it physically exists on the disk
+# Arguments: $1 - Relative path to the file from the $ZDOTDIR root
+function zsh_add_file() {
+    [[ -f "$ZDOTDIR/$1" ]] && source "$ZDOTDIR/$1"
+}
+
+# Dynamically loads or installs GitHub-hosted Zsh plugins
+# Arguments: $1 - The GitHub repository name formatted as "username/repo"
+function zsh_add_plugin() {
+    local plugin_repo="$1"
+    local plugin_name="${plugin_repo#*/}" # Efficiently strips everything before the "/"
+    local plugin_dir="$ZDOTDIR/plugins/$plugin_name"
+
+    if [[ -d "$plugin_dir" ]]; then
+        # Dynamically probe and source the primary plugin entry point script
+        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" || \
+        zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
+    else
+        echo "Installing plugin: $plugin_name..."
+        git clone --depth=1 "https://github.com/$plugin_repo" "$plugin_dir"
+        
+        # Load the newly cloned plugin instantly
+        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" || \
+        zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
+    fi
+}
+
+
+# ╭──────────────────────────────────────────────────────────╮
+# │ 2. PROMPT & ENHANCEMENT MANAGEMENT                       │
+# ╰──────────────────────────────────────────────────────────╯
+
+
+# Dynamically verifies, installs, and initializes the Starship prompt binary
+function zsh_add_starship_prompt() {
+    # Check if the starship application binary is already accessible via PATH
+    if command -v starship >/dev/null 2>&1; then
+        # Initialize the global Starship engine instantly
+        eval "$(starship init zsh)"
+    else
+        echo "🚀 Starship binary missing. Initiating automatic setup on Ubuntu..."
+        
+        # Ensure the user's local binary storage folder exists physically on disk
+        mkdir -p "$HOME/.local/bin"
+        
+        # Pull down the verified installer, setting destination to user-writable path
+        # -y skips confirmation, -b sets binary location avoiding 'sudo' requirement
+        curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
+        
+        # Validate if the newly completed installation was successful
+        if command -v starship >/dev/null 2>&1; then
+            echo "✅ Starship successfully deployed."
+            eval "$(starship init zsh)"
+        else
+            echo "❌ Error: Starship installation attempt failed. Please check network connection."
+        fi
+    fi
+}
+
+
+# ╭──────────────────────────────────────────────────────────╮
+# │ 3. AUTOMATIC PIPENV HOOK (WITH SEAMLESS AUTO-EXIT        │
+# │ REFACTOR)                                                │
+# ╰──────────────────────────────────────────────────────────╯
+
+# Main routine managing both automated entrance and exit workflows
+function auto_pipenv_shell() {
+    
+    # CASE A: Entering a project directory (No active environment detected)
+    if [[ -f "Pipfile" && -z "$PIPENV_ACTIVE" && -z "$VIRTUAL_ENV" ]]; then
+        echo "💡 Pipfile detected. Activating virtual environment..."
+        
+        # Export the exact absolute path where this shell was spawned on disk
+        export PIPENV_SHELL_ORIGIN_DIR="$PWD"
+        
+        # Initialize the nested project environment
+        pipenv shell
+        return
+    fi
+
+    # CASE B: Exiting a project directory (Active Pipenv environment detected)
+    if [[ -n "$PIPENV_ACTIVE" && -n "$PIPENV_SHELL_ORIGIN_DIR" ]]; then
+        # Check if the user's current directory is NO LONGER inside the project root
+        if [[ "$PWD" != "$PIPENV_SHELL_ORIGIN_DIR"* ]]; then
+            echo "👋 Left project directory. Deactivating virtual environment..."
+            
+            # Clean up the reference path variable prior to shutdown
+            unset PIPENV_SHELL_ORIGIN_DIR
+            
+            # Gracefully close the nested shell process, returning to the parent
+            exit
+        fi
+    fi
+}
+
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                LSD (Command Line Utility)                │
+#          ╰──────────────────────────────────────────────────────────╯
+# Dynamically verifies and installs the lsd binary using the APT package manager
+function zsh_ensure_lsd() {
+    # Check if the lsd binary is already accessible via the current execution PATH
+    if ! command -v lsd >/dev/null 2>&1; then
+        echo "📦 'lsd' binary missing. Initiating system package manager setup..."
+        echo "💡 This operation requires administrative privileges to run apt."
+        
+        # Refresh local package lists and install the lsd utility cleanly
+        sudo apt update && sudo apt install -y lsd
+        
+        # Validate if the installation was successfully recorded by the system
+        if command -v lsd >/dev/null 2>&1; then
+            echo "✅ 'lsd' successfully deployed via APT."
+        else
+            echo "❌ Error: Package manager installation failed. Please check network or repositories."
+            return 1
+        fi
+    fi
+}
