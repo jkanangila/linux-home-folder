@@ -53,3 +53,4 @@ alias spst="sudo service postgresql start"
 #          │                      clear command                       │
 #          ╰──────────────────────────────────────────────────────────╯
 alias cl="clear"
+alias lg='lazygit'
