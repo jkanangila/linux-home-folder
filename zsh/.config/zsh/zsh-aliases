@@ -3,6 +3,7 @@
 alias ls='lsd -a --group-directories-first'
 alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
 alias reload="source ~/.zshrc"
+alias vim="nvim"
 
 
 #          ╭──────────────────────────────────────────────────────────╮
