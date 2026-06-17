@@ -62,7 +62,7 @@ export NVM_DIR="$HOME/.nvm"
 #          ╰──────────────────────────────────────────────────────────╯
 # Forces Pipenv to create the hidden '.venv' folder inside the project directory 
 # instead of storing virtual environments in a global system cache folder
-# export PIPENV_VENV_IN_PROJECT=1
+export PIPENV_VENV_IN_PROJECT=1
 
 
 #          ╭──────────────────────────────────────────────────────────╮
