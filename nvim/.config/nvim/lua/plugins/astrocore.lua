@@ -21,6 +21,19 @@ if env.os == "linux" and env.is_wsl then
     },
     cache_enabled = 0,
   }
+elseif env.os == "linux" and (env.is_chroot or env.is_termux) then
+  clipboard_config = {
+    name = "Termux Clipboard",
+    copy = {
+      ["+"] = "termux-clipboard-set",
+      ["*"] = "termux-clipboard-set",
+    },
+    paste = {
+      ["+"] = "termux-clipboard-get",
+      ["*"] = "termux-clipboard-get",
+    },
+    cache_enabled = 0,
+  }
 else
   clipboard_config = nil
 end
