@@ -81,5 +81,7 @@ export NVM_DIR="$HOME/.nvm"
 # eval "$(zoxide init zsh)"
 
 
-# source cargo env
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                     source cargo env                     │
+#          ╰──────────────────────────────────────────────────────────╯
 . "$HOME/.cargo/env"
