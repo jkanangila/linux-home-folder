@@ -5,6 +5,25 @@ if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
 --       as this provides autocomplete and documentation while editing
 
+local env = require "env"
+-- Determine the correct clipboard configuration based on the environment
+local clipboard_config = {}
+if env.os == "linux" and env.is_wsl then
+  clipboard_config = {
+    name = "win32yank-wsl",
+    copy = {
+      ["+"] = "win32yank.exe -i --crlf",
+      ["*"] = "win32yank.exe -i --crlf",
+    },
+    paste = {
+      ["+"] = "win32yank.exe -o --lf",
+      ["*"] = "win32yank.exe -o --lf",
+    },
+    cache_enabled = 0,
+  }
+else
+  clipboard_config = nil
+end
 ---@type LazySpec
 return {
   "AstroNvim/astrocore",
@@ -45,11 +64,13 @@ return {
         spell = false, -- sets vim.opt.spell
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
         wrap = false, -- sets vim.opt.wrap
+        clipboard = "unnamedplus", -- standard desktop clipboard (the one used by Ctrl+C / Ctrl+V)
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
         -- NOTE: `mapleader` and `maplocalleader` must be set in the AstroNvim opts or before `lazy.setup`
         -- This can be found in the `lua/lazy_setup.lua` file
+        clipboard_config,
       },
     },
     -- Mappings can be configured through AstroCore as well.
