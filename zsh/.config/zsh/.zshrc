@@ -26,6 +26,15 @@ unsetopt BEEP
 
 
 #          ╭──────────────────────────────────────────────────────────╮
+#          │      Disable mouse wheel scrolling through history       │
+#          ╰──────────────────────────────────────────────────────────╯
+bindkey -r '^[[A' # Disables Up arrow mapping if triggered by mouse
+bindkey -r '^[[B' # Disables Down arrow mapping if triggered by mouse
+bindkey -M vicmd -r '^[[A' 
+bindkey -M vicmd -r '^[[B'
+
+
+#          ╭──────────────────────────────────────────────────────────╮
 #          │            COMPLETION SYSTEM (COMPINIT) SETUP            │
 #          ╰──────────────────────────────────────────────────────────╯
 
@@ -83,6 +92,8 @@ zsh_add_file "zsh-aliases"
 
 # Fetches or injects predictive command suggestions based on the user's history profile
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
+# Only accept suggestions with Right Arrow or End key
+ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(forward-char end-of-line)
 
 # Fetches or injects live syntax validation coloring for recognized terminal keywords
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
@@ -112,7 +123,3 @@ add-zsh-hook chpwd auto_pipenv_shell
 
 # Evaluates the active directory immediately upon core shell initialization
 auto_pipenv_shell
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
