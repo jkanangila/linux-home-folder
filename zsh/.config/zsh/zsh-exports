@@ -1,29 +1,21 @@
 #!/bin/sh
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │              TERMINAL HISTORY CONFIGURATION              │
 #          ╰──────────────────────────────────────────────────────────╯
-# Defines the physical file where command history is permanently stored
-HISTFILE="$HOME"/.zsh_history 
-
-# Sets the maximum number of history lines kept in active terminal memory
-HISTSIZE=1000000 
-
-# Sets the maximum number of history lines actually saved to the disk file
-SAVEHIST=1000000
-
-# Appends new commands to the history file instead of overwriting it
-setopt appendhistory 
-
+# Only set history if we are running in Zsh (since these are Zsh-specific variables)
+if [ -n "$ZSH_VERSION" ]; then
+    HISTFILE="$HOME"/.zsh_history 
+    HISTSIZE=1000000 
+    SAVEHIST=1000000
+    setopt appendhistory 
+fi
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │          SYSTEM PATHS AND ENVIRONMENT SETTINGS           │
 #          ╰──────────────────────────────────────────────────────────╯
 # Updates the search path to include local binaries and standard system folders
 PATH="$PATH:$HOME/.local/bin:/usr/bin:/usr/local/bin"
-
-# Exports the updated PATH so all child processes and scripts can access it
 export PATH
 
 # Prevents system manual (man) pages from clipping text or wrapping lines early
@@ -33,55 +25,80 @@ export MANWIDTH=999
 #          ╭──────────────────────────────────────────────────────────╮
 #          │       PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
 #          ╰──────────────────────────────────────────────────────────╯
-# Defines the root directory where pyenv stores its files and Python versions
-export PYENV_ROOT="$HOME/.pyenv"
-#
-# # Adds pyenv to PATH if the 'pyenv' command is not already recognized by the shell
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# Only configure pyenv if its directory exists
+if [ -d "$HOME/.pyenv" ]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    
+    # Adds pyenv to PATH if the 'pyenv' command is not already recognized
+    if ! command -v pyenv >/dev/null 2>&1; then
+        export PATH="$PYENV_ROOT/bin:$PATH"
+    fi
 
-
-# # Initializes pyenv shims to intercept and route 'python' and 'pip' commands
-eval "$(pyenv init -)"
+    # Initializes pyenv shims if the command is now available
+    if command -v pyenv >/dev/null 2>&1; then
+        eval "$(pyenv init -)"
+    fi
+fi
 
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │         NVM CONFIGURATION (NODE VERSION MANAGER)         │
 #          ╰──────────────────────────────────────────────────────────╯
-# Defines the directory where NVM stores its core scripts and Node.js versions
-export NVM_DIR="$HOME/.nvm" 
-#
-# # Checks if the core NVM script exists and is not empty, then loads it into the shell
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-#
-# # Checks if the auto-completion script exists, then loads it to enable Tab completion
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# Only configure NVM if the directory exists
+if [ -d "$HOME/.nvm" ]; then
+    export NVM_DIR="$HOME/.nvm" 
+    
+    # Checks if the core NVM script exists and is not empty, then loads it
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
+    # Checks if the auto-completion script exists, then loads it
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
 
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │     PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)     │
 #          ╰──────────────────────────────────────────────────────────╯
-# Forces Pipenv to create the hidden '.venv' folder inside the project directory 
-# instead of storing virtual environments in a global system cache folder
-export PIPENV_VENV_IN_PROJECT=1
+# Forces Pipenv to use project-local environments if pipenv is installed
+if command -v pipenv >/dev/null 2>&1; then
+    export PIPENV_VENV_IN_PROJECT=1
+fi
 
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │        RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
 #          ╰──────────────────────────────────────────────────────────╯
-# Adds the rbenv binary folder to the front of the execution path so the shell can find it
-# export PATH="$HOME/.rbenv/bin:$PATH"
-#
-# # Initializes rbenv shims to manage and route different Ruby versions seamlessly
-# eval "$(rbenv init -)"
+# Check if rbenv directory exists before adding to PATH and initializing
+if [ -d "$HOME/.rbenv" ]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    
+    if command -v rbenv >/dev/null 2>&1; then
+        eval "$(rbenv init -)"
+    fi
+fi
 
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │ZOxIDE (a smarter cd command, inspired by z and autojump) │
 #          ╰──────────────────────────────────────────────────────────╯
-# eval "$(zoxide init zsh)"
+# Only initialize zoxide if the binary is installed
+if command -v zoxide >/dev/null 2>&1; then
+    # Ensures zsh-specific init is only called if inside a zsh shell
+    if [ -n "$ZSH_VERSION" ]; then
+        eval "$(zoxide init zsh)"
+    else
+        eval "$(zoxide init posix)"
+    fi
+fi
 
 
 #          ╭──────────────────────────────────────────────────────────╮
-#          │                     source cargo env                     │
+#          │                       source cargo env                   │
 #          ╰──────────────────────────────────────────────────────────╯
-. "$HOME/.cargo/env"
+# Source cargo configuration files only if they exist and are readable
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# Add cargo bin to PATH only if it's a valid directory
+if [ -d "$HOME/.cargo/bin" ]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
