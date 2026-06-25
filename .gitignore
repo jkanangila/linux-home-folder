@@ -10,3 +10,5 @@ playground
 zsh/.config/zsh/plugins/
 zsh/.config/zsh/.zcompdump
 zsh/.config/zsh/.zshenv
+
+nvim/.config/nvim/lazy-lock.json
