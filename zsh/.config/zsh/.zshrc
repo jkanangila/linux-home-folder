@@ -28,8 +28,6 @@ unsetopt BEEP
 #          ╭──────────────────────────────────────────────────────────╮
 #          │      Disable mouse wheel scrolling through history       │
 #          ╰──────────────────────────────────────────────────────────╯
-# bindkey -r '^[[A' # Disables Up arrow mapping if triggered by mouse
-# bindkey -r '^[[B' # Disables Down arrow mapping if triggered by mouse
 bindkey -M vicmd -r '^[[A' 
 bindkey -M vicmd -r '^[[B'
 
