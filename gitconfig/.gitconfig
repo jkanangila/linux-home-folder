@@ -1,0 +1,7 @@
+[user]
+	name = John Mulamba Kanangila
+	email = jkanangila@gmail.com
+[init]
+	defaultBranch = main
+[core]
+	editor = nvim --wait
