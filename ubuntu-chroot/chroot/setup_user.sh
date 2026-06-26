@@ -1,10 +1,7 @@
-
 #!/bin/bash
 
 # Exit immediately if a command exits with a non-zero status
 set -e
-
-USERNAME="jkanangila"
 
 # 1. Verify root execution
 if [ "$(id -u)" -ne 0 ]; then
@@ -31,46 +28,100 @@ locale-gen fr_FR.UTF-8
 update-locale LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# 4. Create the new user
-echo "Creating user: $USERNAME..."
-if id "$USERNAME" &>/dev/null; then
-    echo "User $USERNAME already exists."
-else
-    # -m creates the home directory, -s sets the default shell to bash
-    useradd -m -s /bin/bash "$USERNAME"
+# -------------------------------------------------------------------------
+# CONFIGURATION
+# -------------------------------------------------------------------------
+USERNAME="jkanangila"
+PASSWORD="SecurePassword123!" # Change this after your first login!
+
+# Associative array linking critical Android AID names to their exact Android Kernel GIDs
+declare -A ANDROID_GROUPS=(
+    ["aid_system"]=1000
+    ["aid_radio"]=1001
+    ["aid_graphics"]=1003
+    ["aid_input"]=1004
+    ["aid_audio"]=1005
+    ["aid_camera"]=1006
+    ["aid_log"]=1007
+    ["aid_compass"]=1008
+    ["aid_mount"]=1009
+    ["aid_ext_data"]=1021
+    ["aid_sdcard_rw"]=1015
+    ["aid_media_rw"]=1023
+    ["aid_bt"]=3001
+    ["aid_bt_net"]=3002
+    ["aid_inet"]=3003
+    ["aid_net_raw"]=3004
+    ["aid_admin"]=3005
+)
+
+# -------------------------------------------------------------------------
+# EXECUTION
+# -------------------------------------------------------------------------
+
+# 1. Ensure the script is run as root inside the chroot
+if [ "$EUID" -ne 0 ]; then
+    echo "Error: This script must be executed as root." >&2
+    exit 1
 fi
 
-# 5. Grant administrative privileges & passwordless sudo
-echo "Configuring passwordless sudo for $USERNAME..."
-usermod -aG sudo "$USERNAME"
-echo "$USERNAME ALL=(ALL:ALL) NOPASSWD: ALL" > "/etc/sudoers.d/$USERNAME"
-chmod 0440 "/etc/sudoers.d/$USERNAME"
+echo "Initializing user provision for Android Chroot..."
 
-# 6. Install NVM (Node Version Manager)
-echo "Installing NVM for user $USERNAME..."
-# We use 'su -c' to ensure NVM is installed directly into the user's home directory
-su - "$USERNAME" -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+# 2. Safely create Android System Groups mapping to exact Kernel AIDs
+for group_name in "${!ANDROID_GROUPS[@]}"; do
+    gid="${ANDROID_GROUPS[$group_name]}"
 
-# 7. Install Pyenv
-echo "Installing Pyenv for user $USERNAME..."
-su - "$USERNAME" -c "curl https://pyenv.run | bash"
+    if ! getent group "$group_name" >/dev/null; then
+        echo "Mapping group: $group_name with GID: $gid"
+        groupadd -g "$gid" "$group_name"
+    else
+        # Check if existing group has the matching GID
+        existing_gid=$(getent group "$group_name" | cut -d: -f3)
+        if [ "$existing_gid" -ne "$gid" ]; then
+            echo "Warning: Group $group_name exists but has GID $existing_gid (Expected $gid)"
+        fi
+    fi
+done
 
-# 8. Configure .bashrc for Pyenv
-# NVM automatically appends its configuration to .bashrc, but Pyenv needs manual setup.
-echo "Configuring Pyenv environment variables..."
-cat << 'EOF' >> "/home/$USERNAME/.bashrc"
+# 3. Create the user 'jkanangila' with a dedicated home directory
+if ! id "$USERNAME" &>/dev/null; then
+    echo "Creating user: $USERNAME"
+    useradd -m -s /bin/bash "$USERNAME"
+    echo "$USERNAME:$PASSWORD" | chpasswd
+    echo "User $USERNAME created successfully."
+else
+    echo "User $USERNAME already exists. Updating configuration..."
+fi
 
-# Pyenv Configuration
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-EOF
+# 4. Bind the user to all newly mapped Android AIDs
+echo "Assigning Android permission layers to $USERNAME..."
+for group_name in "${!ANDROID_GROUPS[@]}"; do
+    usermod -aG "$group_name" "$USERNAME"
+done
 
-# Ensure all files in the home directory are owned by the user
-chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
+# 5. Fix Home Directory Ownership and Isolation
+echo "Configuring home folder permissions..."
+USER_HOME=$(eval echo "~$USERNAME")
+chmod 700 "$USER_HOME"
+chown -R "$USERNAME:$USERNAME" "$USER_HOME"
 
-echo "==================================================="
-echo "Setup is complete!"
-echo "Switch to your new user by running: su - $USERNAME"
-echo "==================================================="
+# 6. Establish Passwordless Sudo Access
+echo "Injecting passwordless sudo access..."
+SUDOERS_FILE="/etc/sudoers.d/90-$USERNAME"
+
+# Set up clean drop-in configuration bypassing password authentication
+echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >"$SUDOERS_FILE"
+chmod 0440 "$SUDOERS_FILE"
+
+# -------------------------------------------------------------------------
+# VERIFICATION & DIAGNOSTICS
+# -------------------------------------------------------------------------
+echo "--------------------------------------------------------"
+echo "Android Chroot User Setup Complete!"
+echo "--------------------------------------------------------"
+echo "Target User   : $USERNAME"
+echo "Home Path     : $USER_HOME"
+echo "Sudo Access   : Active (Passwordless)"
+echo "Assigned AIDs : $(groups $USERNAME)"
+echo "--------------------------------------------------------"
+echo "CRITICAL: Remember to update your user password using: passwd $USERNAME"
