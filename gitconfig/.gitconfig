@@ -4,4 +4,6 @@
 [init]
 	defaultBranch = main
 [core]
-	editor = nvim --wait
+	editor = nvim
+[pull]
+	rebase = false
