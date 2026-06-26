@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # File: ~/chroot/enter-chroot.sh
 # Logs all operations to ~/chroot/ubuntu.log
 
@@ -6,6 +6,7 @@ set -e
 
 CHROOT_PATH="/data/data/com.termux/files/home/chroot/ubuntu"
 CHROOT_NAME="ubuntu-chroot"
+CHROOT_USER="jkanangila"
 LOG_FILE="/data/data/com.termux/files/home/chroot/ubuntu.log"
 
 # Ensure log directory exists
@@ -17,7 +18,7 @@ log() {
     shift
     local message="$@"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    echo "[$timestamp] [$level] $message" >> "$LOG_FILE"
+    echo "[$timestamp] [$level] $message" >>"$LOG_FILE"
     echo "[$timestamp] [$level] $message"
 }
 
@@ -27,20 +28,26 @@ log "INFO" "Log file: $LOG_FILE"
 
 # Cleanup function - unmount everything
 cleanup() {
+    # 1. Capture exit code immediately
     local exit_code=$?
-    
+
+    # 2. Disable traps to prevent recursive double-execution on exit
+    trap - EXIT INT TERM
+
+    # 3. Disable exit-on-error so a failed unmount doesn't skip the rest
+    set +e
+
     if [ $exit_code -ne 0 ]; then
         log "ERROR" "An error occurred (exit code: $exit_code). Starting cleanup..."
     else
         log "INFO" "Session ended normally. Cleaning up mounts..."
     fi
-   
 
-    
-    for mount_point in \
-        data run dev/pts dev sys proc; do
+    # Unmount in reverse order (dev/pts MUST be unmounted before dev)
+    for mount_point in data run dev/pts dev sys proc; do
         full_path="$CHROOT_PATH/$mount_point"
-        if grep -q "$full_path" /proc/mounts; then
+        # Use -F for fixed string matching to avoid regex interpretation of paths
+        if grep -qF "$full_path" /proc/mounts; then
             log "INFO" "Unmounting $mount_point at $full_path"
             busybox umount -l "$full_path" || log "WARN" "Failed to unmount $mount_point, may be in use"
         fi
@@ -62,7 +69,7 @@ fi
 log "INFO" "Chroot directory verified"
 
 # Create necessary directories if they don't exist
-for dir in proc sys dev dev/pts run data; do
+for dir in proc sys dev dev/pts run data etc; do
     dir_path="$CHROOT_PATH/$dir"
     if [ ! -d "$dir_path" ]; then
         mkdir -p "$dir_path"
@@ -105,16 +112,25 @@ else
     log "WARN" "/run mount failed or already mounted"
 fi
 
-# Mount Termux data for tool access
+# Mount Termux data for tool access and safely remount with elevated permissions
 if busybox mount --rbind /data "$CHROOT_PATH/data" 2>/dev/null; then
     log "INFO" "Mounted /data to /data (rbind)"
+
+    # Safely remount ONLY the chroot's view of this directory with new flags
+    if busybox mount -o remount,bind,exec,dev,suid "$CHROOT_PATH/data" 2>/dev/null; then
+        log "INFO" "Successfully remounted chroot /data with exec,dev,suid"
+    else
+        log "WARN" "Could not apply exec/dev/suid flags to chroot /data"
+    fi
 else
     log "WARN" "/data mount failed or already mounted"
 fi
 
 # Setup resolv.conf for DNS
 log "INFO" "Configuring DNS resolution..."
-cat > "$CHROOT_PATH/etc/resolv.conf" << 'EOF'
+# Remove symlink if it exists to prevent overwriting host files or failing
+rm -f "$CHROOT_PATH/etc/resolv.conf"
+cat >"$CHROOT_PATH/etc/resolv.conf" <<'EOF'
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 nameserver 1.1.1.1
@@ -122,16 +138,17 @@ EOF
 log "INFO" "DNS configured: 8.8.8.8, 8.8.4.4, 1.1.1.1"
 
 # Get actual UID/GID
-ACTUAL_UID=$(id -u)
-ACTUAL_GID=$(id -g)
-log "INFO" "Running as UID: $ACTUAL_UID, GID: $ACTUAL_GID"
+# ACTUAL_UID=$(id -u)
+# ACTUAL_GID=$(id -g)
+# log "INFO" "Running as UID: $ACTUAL_UID, GID: $ACTUAL_GID"
 
 log "INFO" "All mounts successful. Entering chroot..."
 
 # Enter chroot with full environment
+# Inherit host TERM dynamically instead of hardcoding, but fallback to xterm-256color
 chroot "$CHROOT_PATH" /bin/bash -c "
     export HOME=/root
-    export TERM=xterm-256color
+    export TERM=${TERM:-xterm-256color} 
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     export USER=root
     
@@ -141,5 +158,3 @@ chroot "$CHROOT_PATH" /bin/bash -c "
     # Start interactive shell
     exec /bin/bash -i
 "
-
-
