@@ -55,3 +55,11 @@ alias spst="sudo service postgresql start"
 #          ╰──────────────────────────────────────────────────────────╯
 alias cl="clear"
 alias lg='lazygit'
+
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │         Conditionally add alias to enter chroot          │
+#          ╰──────────────────────────────────────────────────────────╯
+if command -v tsu >/dev/null 2>&1 && [ -f /data/data/com.termux/files/home/chroot/enter-chroot.sh ]; then
+    alias ubstart='tsu -c "sh /data/data/com.termux/files/home/chroot/enter-chroot.sh"'
+fi
