@@ -43,6 +43,21 @@ return {
     -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
     config = {
       -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      -- Let Ruff do the linting and organize imports
+      basedpyright = {
+        settings = {
+          basedpyright = {
+            -- Disable duplicate features handled by Ruff
+            disableOrganizeImports = true,
+          },
+          python = {
+            analysis = {
+              -- Adjust or turn off diagnostics if Ruff handles them
+              typeCheckingMode = "off",
+            },
+          },
+        },
+      },
     },
     -- customize how language servers are attached
     handlers = {
