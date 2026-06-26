@@ -1,10 +1,13 @@
+# zsh
 zsh/.config/zsh/plugins/
 zsh/.config/zsh/.zcompdump
 zsh/.config/zsh/.zshenv
 
+# nvim
 nvim/.config/nvim/lazy-lock.json
 
+# Chroot
 ubuntu-chroot/chroot/ubuntu
 ubuntu-chroot/chroot/ubuntu.log
 ubuntu-chroot/chroot/ubuntu-base-24.04.4-base-arm64.tar.gz
-
+ubuntu-chroot/chroot/ubuntu-backup.tar.bz2
