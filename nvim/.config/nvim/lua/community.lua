@@ -12,4 +12,14 @@ return {
   { import = "astrocommunity.pack.python.base" },
   { import = "astrocommunity.pack.python.basedpyright" },
   { import = "astrocommunity.pack.python.ruff" },
+  -- Bash
+  { import = "astrocommunity.pack.bash" },
+  -- Markdown Language Pack
+  { import = "astrocommunity.pack.markdown" },
+  -- TOML Language Pack
+  { import = "astrocommunity.pack.toml" },
+  -- Prettier
+  { import = "astrocommunity.pack.prettier" },
+  -- JSON Language Pack
+  { import = "astrocommunity.pack.json" },
 }
