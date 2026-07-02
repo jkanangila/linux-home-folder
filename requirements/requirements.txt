@@ -1,0 +1,8 @@
+commitizen
+pipenv
+platformdirs
+pynvim
+setuptools
+termcolor
+tomlkit
+virtualenv
