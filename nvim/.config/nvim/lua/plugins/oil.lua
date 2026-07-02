@@ -1,8 +1,11 @@
+---@type LazySpec
 return {
   "stevearc/oil.nvim",
   dependencies = {
     {
       "antosha417/nvim-lsp-file-operations",
+      -- We must pull in plenary and nvim-tree.lua structures as backend helpers
+      dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-tree.lua" },
       config = true,
     },
     {
@@ -11,13 +14,12 @@ return {
       opts = {
         mappings = {
           n = {
-            ["<leader>o"] = { desc = "󰏇 Oil File Explorer" },
+            ["<leader>o"] = { desc = "   Oil File Explorer" },
 
             ---@doc Toggle Oil in the directory of the current active buffer
             ["<leader>oo"] = {
               function()
                 local oil = require "oil"
-                -- Check if the current buffer is an oil buffer
                 if vim.bo.filetype == "oil" then
                   oil.close()
                 else
@@ -47,7 +49,7 @@ return {
   opts = {
     lsp_file_methods = {
       timeout_ms = 120000,
-      autosave_changes = true,
+      autosave_changes = true, -- Automatically saves the updated python files
     },
   },
   lazy = false,
