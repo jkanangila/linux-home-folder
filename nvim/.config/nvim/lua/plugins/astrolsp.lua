@@ -45,10 +45,22 @@ return {
       -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
       -- Let Ruff do the linting and organize imports
       basedpyright = {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            },
+          },
+        },
         settings = {
           basedpyright = {
             -- Disable duplicate features handled by Ruff
             disableOrganizeImports = true,
+            analysis = {
+              -- Ensures basedpyright constantly indexes the whole tree
+              diagnosticMode = "workspace",
+              useLibraryCodeForTypes = true,
+            },
           },
           python = {
             analysis = {
