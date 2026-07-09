@@ -18,19 +18,32 @@ return {
     formatting = {
       format_on_save = {
         enabled = true,
-        allow_filetypes = {},
+        allow_filetypes = { "python" }, -- Explicitly ensure python triggers formatting
         ignore_filetypes = {},
       },
       disabled = {},
       timeout_ms = 120000,
     },
-    servers = {},
+    -- Explicitly tell AstroLSP to look for these servers
+    servers = { "basedpyright", "ruff" },
     -- customize language server configuration passed to `vim.lsp.config`
     config = {
-      -- Let Ruff do the linting and organize imports
+      -- ─── RUFF CONFIGURATION ────────────────────────────────────────────────
+      ruff = {
+        on_attach = function(client, _)
+          -- Disable Ruff's hover capability so it doesn't conflict with Basedpyright
+          if client.name == "ruff" then client.server_capabilities.hoverProvider = false end
+        end,
+        init_options = {
+          settings = {
+            -- Any extra CLI arguments you want to pass to ruff can go here
+            args = {},
+          },
+        },
+      },
+      -- ─── BASEDPYRIGHT CONFIGURATION ────────────────────────────────────────
       basedpyright = {
         -- ─── CRITICAL FIX FOR FILE OPERATIONS ─────────────────────────────────
-        -- We extract the capabilities table safely inline here to satisfy the type checker.
         capabilities = vim.tbl_deep_extend("force", {
           workspace = {
             didChangeWatchedFiles = {
@@ -44,14 +57,18 @@ return {
             -- Disable duplicate features handled by Ruff
             disableOrganizeImports = true,
             analysis = {
-              -- Ensures basedpyright constantly indexes the whole tree
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
-            },
-          },
-          python = {
-            analysis = {
-              typeCheckingMode = "off",
+              typeCheckingMode = "standard",
+              strictDictionaryInference = true,
+              -- Prevents Basedpyright from complaining about things Ruff is already linting
+              ignore = { "*" },
+              diagnosticSeverityOverrides = {
+                reportGeneralTypeIssues = "error",
+                -- Let Ruff handle unused imports/variables cleanly
+                reportUnusedImport = "none",
+                reportUnusedVariable = "none",
+              },
             },
           },
         },
