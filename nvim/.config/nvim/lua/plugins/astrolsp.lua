@@ -61,13 +61,14 @@ return {
               useLibraryCodeForTypes = true,
               typeCheckingMode = "standard",
               strictDictionaryInference = true,
-              -- Prevents Basedpyright from complaining about things Ruff is already linting
-              ignore = { "*" },
+              -- FIXED: Removed `ignore = { "*" }` which was disabling all type checking.
               diagnosticSeverityOverrides = {
                 reportGeneralTypeIssues = "error",
-                -- Let Ruff handle unused imports/variables cleanly
+                -- Let Ruff handle unused imports/variables cleanly without duplicate diagnostics
                 reportUnusedImport = "none",
                 reportUnusedVariable = "none",
+                reportUnusedClass = "none",
+                reportUnusedFunction = "none",
               },
             },
           },
