@@ -84,6 +84,35 @@ return {
         clipboard_config,
       },
     },
+
+    -- Register custom vim user commands
+    commands = {
+      LspRestart = {
+        function()
+          -- Gather active LSP clients via the native engine
+          local active_clients = vim.lsp.get_clients { bufnr = 0 }
+          
+          if #active_clients == 0 then
+            vim.notify("No active LSP clients found to restart", vim.log.levels.WARN, { title = "AstroCore" })
+            return
+          end
+
+          -- Terminate each running client process
+          for _, client in ipairs(active_clients) do
+            client.stop()
+          end
+
+          -- Wait a brief moment for processes to release, then cleanly reload the buffer state
+          vim.defer_fn(function()
+            -- Forcing a silent reload of the file re-triggers all LSP attachment hooks natively
+            vim.cmd "silent! edit!"
+            vim.notify("LSP Servers Restarted via Buffer Reload", vim.log.levels.INFO, { title = "AstroCore" })
+          end, 150)
+        end,
+        desc = "Restart all active LSP clients attached to the current buffer",
+      },
+    },
+
     -- Mappings can be configured through AstroCore as well.
     -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
     mappings = {
@@ -106,6 +135,10 @@ return {
         },
         -- In your mapping configuration (Normal mode)
         ["<leader>sv"] = { "<cmd>source $MYVIMRC<cr>", desc = "Reload Neovim Config" },
+        
+        -- Custom binding for our native-safe LSP restart command
+        ["<Leader>lr"] = { "<cmd>LspRestart<cr>", desc = "Restart LSP" },
+
         -- tables with just a `desc` key will be registered with which-key if it's installed
         -- this is useful for naming menus
         -- ["<Leader>b"] = { desc = "Buffers" },
