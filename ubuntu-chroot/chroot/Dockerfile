@@ -19,12 +19,13 @@ RUN apt-get update && apt-get install -y \
 # 2. Configure Locales
 RUN update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
-# 3. Compile Neovim 0.11+ from source 
-RUN git clone --depth 1 -b master https://github.com/neovim/neovim.git /tmp/neovim && \
-    cd /tmp/neovim && \
-    make CMAKE_BUILD_TYPE=RelWithDebInfo && \
-    make install && \
-    rm -rf /tmp/neovim
+# 3. Install Pre-compiled Neovim Stable (ARM64 / x86_64 auto-detection)
+RUN ARCH=$(dpkg --print-architecture) && \
+    if [ "$ARCH" = "amd64" ]; then NV_ARCH="linux64"; else NV_ARCH="linux-arm64"; fi && \
+    curl -LO "https://github.com/neovim/neovim/releases/download/stable/nvim-${NV_ARCH}.tar.gz" && \
+    tar -C /opt -xzf nvim-${NV_ARCH}.tar.gz && \
+    ln -s /opt/nvim-${NV_ARCH}/bin/nvim /usr/local/bin/nvim && \
+    rm nvim-${NV_ARCH}.tar.gz
 
 # 4. Install Lazygit
 RUN ARCH=$(dpkg --print-architecture) && \
@@ -63,10 +64,7 @@ RUN useradd -m -s /usr/bin/zsh jkanangila && \
 USER jkanangila
 WORKDIR /home/jkanangila
 
-# 9. Install Tree-sitter CLI via Cargo
-RUN cargo install tree-sitter-cli
-
-# 10. Configure .zshrc paths so everything works inside the chroot
+# 9. Configure .zshrc paths so everything works inside the chroot
 RUN echo 'export LANG=en_US.UTF-8' >> ~/.zshrc && \
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc && \
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc && \
@@ -75,7 +73,7 @@ RUN echo 'export LANG=en_US.UTF-8' >> ~/.zshrc && \
     echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc && \
     echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.zshrc
 
-# 11. Install Pyenv and Python 3.12.3
+# 10. Install Pyenv and Python 3.12.3
 RUN curl https://pyenv.run | bash && \
     export PYENV_ROOT="$HOME/.pyenv" && \
     export PATH="$PYENV_ROOT/bin:$PATH" && \
@@ -84,15 +82,15 @@ RUN curl https://pyenv.run | bash && \
     pyenv global 3.12.3 && \
     pip install pynvim
 
-# 12. Install NVM, Node Latest, Yarn, and Neovim npm package
+# 11. Install NVM, Node Latest, Yarn, Neovim client, AND Tree-sitter CLI
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     export NVM_DIR="$HOME/.nvm" && \
     \. "$NVM_DIR/nvm.sh" && \
     nvm install node && \
     nvm alias default node && \
-    npm install -g yarn neovim
+    npm install -g yarn neovim tree-sitter-cli
 
-# 13. Clone dotfiles, handle safe backups, run Stow, and install PIP requirements
+# 12. Clone dotfiles, handle safe backups, run Stow, and install PIP requirements
 RUN git clone https://github.com/jkanangila/linux-home-folder.git /home/jkanangila/dotfiles && \
     mkdir -p /home/jkanangila/.config && \
     # Safe check and backup phase
@@ -117,6 +115,9 @@ RUN git clone https://github.com/jkanangila/linux-home-folder.git /home/jkanangi
     stow tmux && \
     stow zsh && \
     # Run pip installations from stowed requirements
+    export PYENV_ROOT="/home/jkanangila/.pyenv" && \
+    export PATH="$PYENV_ROOT/bin:$PATH" && \
+    eval "$(pyenv init -)" && \
     if [ -f "/home/jkanangila/requirements.txt" ]; then \
         pip install -r /home/jkanangila/requirements.txt; \
     fi

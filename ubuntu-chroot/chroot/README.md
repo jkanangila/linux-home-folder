@@ -26,7 +26,7 @@ Navigate to the directory housing your Dockerfile and execute the build.
 (Note: Compiling Neovim and Python from source for an alternate target architecture takes time. Let the pipeline process finish).
 
 ```bash
-docker buildx build --platform linux/arm64 -t YOUR_DOCKERHUB_USERNAME/ubuntu-chroot:latest --push .
+docker buildx build --platform linux/arm64 -t jkanangila/ubuntu-chroot:latest --push .
 ```
 
 ## Part 2: Setup and Deployment on Termux (Android)
