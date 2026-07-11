@@ -1,4 +1,3 @@
-
 return {
   {
     "ThePrimeagen/refactoring.nvim",
@@ -10,18 +9,6 @@ return {
     },
     config = function()
       require("refactoring").setup({})
-
-      -- Monitor buffer edits to refresh basedpyright instantly
-      vim.api.nvim_create_autocmd("BufWritePost", {
-        pattern = "*.py",
-        callback = function()
-          -- Safely locate and reload basedpyright when you write a file
-          for _, client in ipairs(vim.lsp.get_clients({ name = "basedpyright" })) do
-            -- Trigger an immediate, seamless hot-reload of the language server engine
-            vim.cmd("LspRestart basedpyright")
-          end
-        end,
-      })
     end,
     keys = {
       -- 1. Extract block/function to a BRAND NEW FILE (with post-save trigger)

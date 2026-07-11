@@ -51,14 +51,64 @@ cd ~/chroot-distro
 Make the script executable:
 
 ```bash
-chmod +x chroot-distro
+pip install .
+```
+**Patch the installed module**
+Let's expand the previous initialization patch script. This updated command will inject safety bindings for setgid, setuid, and setgroups globally straight into the core of your installed chroot_distro package.
+
+```bash
+python3 -c "
+import chroot_distro, pathlib
+init_file = pathlib.Path(chroot_distro.__file__).parent / '__init__.py'
+
+patch = '''
+import ctypes, os
+
+# 1. Inject missing chroot capability
+if not hasattr(os, 'chroot'):
+    def _chroot(path):
+        libc = ctypes.CDLL('libc.so')
+        if libc.chroot(path.encode('utf-8')) != 0:
+            raise OSError(ctypes.get_errno(), f'chroot failed for {path}')
+    os.chroot = _chroot
+
+# 2. Inject missing group/user identifier bindings
+if not hasattr(os, 'setgid'):
+    def _setgid(gid):
+        libc = ctypes.CDLL('libc.so')
+        if libc.setgid(ctypes.c_int(gid)) != 0:
+            raise OSError(ctypes.get_errno(), 'setgid failed')
+    os.setgid = _setgid
+
+if not hasattr(os, 'setuid'):
+    def _setuid(uid):
+        libc = ctypes.CDLL('libc.so')
+        if libc.setuid(ctypes.c_int(uid)) != 0:
+            raise OSError(ctypes.get_errno(), 'setuid failed')
+    os.setuid = _setuid
+
+if not hasattr(os, 'setgroups'):
+    def _setgroups(groups):
+        libc = ctypes.CDLL('libc.so')
+        size = len(groups)
+        GroupArray = ctypes.c_int * size
+        array = GroupArray(*groups)
+        if libc.setgroups(ctypes.c_size_t(size), array) != 0:
+            raise OSError(ctypes.get_errno(), 'setgroups failed')
+    os.setgroups = _setgroups
+'''
+
+# Overwrite with all necessary system call overrides
+init_file.write_text(patch + init_file.read_text())
+print('Successfully applied multi-user system patches to chroot-distro!')
+"
 ```
 
 ### 3. Deploy Your Custom Image
 Using the framework's build parser, pull down your remote Docker image. It will strip the container layers, map out the environment permissions, and provision the rootfs tarball locally:
 
 ```bash
-sudo ./chroot-distro install ubuntu-dev --image YOUR_DOCKERHUB_USERNAME/ubuntu-chroot:latest
+chroot-distro install jkanangila/ubuntu-chroot:latest
 ```
 
 ## Part 3: Environment Lifecycle (Log In / Log Out)
@@ -66,7 +116,7 @@ sudo ./chroot-distro install ubuntu-dev --image YOUR_DOCKERHUB_USERNAME/ubuntu-c
 To activate the environment as your personalized user profile (jkanangila) while tracking interactive terminal shells:
 
 ```bash
-sudo ./chroot-distro login ubuntu-dev --user jkanangila
+chroot-distro login ubuntu-chroot --user jkanangila
 ```
 
 **Logging Out**
