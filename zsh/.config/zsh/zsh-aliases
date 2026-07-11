@@ -60,6 +60,5 @@ alias lg='lazygit'
 #          ╭──────────────────────────────────────────────────────────╮
 #          │         Conditionally add alias to enter chroot          │
 #          ╰──────────────────────────────────────────────────────────╯
-if command -v tsu >/dev/null 2>&1 && [ -f /data/data/com.termux/files/home/chroot/enter-chroot.sh ]; then
-    alias ubuntu='su -c "sh /data/data/com.termux/files/home/chroot/enter-chroot.sh"'
-fi
+alias ubuntu="su -mm -c 'exec /data/data/com.termux/files/home/chroot/start_ubuntu.sh'"
+alias ubuntu-root="su -mm -c 'exec /data/data/com.termux/files/home/chroot/root_ubuntu.sh'"
