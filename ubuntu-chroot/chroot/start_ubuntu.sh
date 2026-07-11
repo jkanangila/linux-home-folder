@@ -13,7 +13,7 @@ fi
 cleanup() {
   echo -e "\n[*] Cleaning up and safely unmounting filesystems..."
   for mp in sdcard dev/pts dev/shm dev sys proc; do
-    umount "$CHROOT_DIR/$mp" 2>/dev/null || true
+    busybox umount "$CHROOT_DIR/$mp" 2>/dev/null || true
   done
   echo "[*] Exited chroot cleanly."
 }
@@ -36,7 +36,7 @@ safe_mount() {
     return 0 # Already mounted, skip silently
   else
     shift # Drop the path argument, pass the remaining parameters directly to mount
-    mount "$@" "$target_path" 2>/dev/null
+    busybox mount "$@" "$target_path" 2>/dev/null
   fi
 }
 

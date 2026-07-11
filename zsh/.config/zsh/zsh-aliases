@@ -62,3 +62,4 @@ alias lg='lazygit'
 #          ╰──────────────────────────────────────────────────────────╯
 alias ubuntu="su -c 'exec /data/data/com.termux/files/home/chroot/start_ubuntu.sh'"
 alias ubuntu-root="su -c 'exec /data/data/com.termux/files/home/chroot/root_ubuntu.sh'"
+alias ubuntu-stop="su -c 'exec /data/data/com.termux/files/home/chroot/stop_ubuntu.sh'"
