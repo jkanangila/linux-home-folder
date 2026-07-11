@@ -25,20 +25,35 @@ trap cleanup EXIT HUP INT TERM
 busybox mount -o remount,dev,suid /data
 
 echo "[*] Mounting essential system directories..."
-mount -t proc proc "$CHROOT_DIR/proc"
-mount -t sysfs sysfs "$CHROOT_DIR/sys"
-mount -o bind /dev "$CHROOT_DIR/dev"
 
-# BIND-MOUNT host's existing devpts so Termux's TTYs are passed directly to the chroot
-mount -o bind /dev/pts "$CHROOT_DIR/dev/pts"
+# Helper function to check mounts before running them
+safe_mount() {
+  target_path="$CHROOT_DIR/$1"
+  # Clean up path string trailing slashes for an exact match in /proc/mounts
+  match_path=$(echo "$target_path" | sed 's/\/$//')
+  
+  if grep -qF " $match_path " /proc/mounts; then
+    return 0 # Already mounted, skip silently
+  else
+    shift # Drop the path argument, pass the remaining parameters directly to mount
+    mount "$@" "$target_path" 2>/dev/null
+  fi
+}
 
-# Android specifically requires a tmpfs for shared memory; otherwise, databases and multiprocess apps crash
+safe_mount "proc" -t proc proc
+safe_mount "sys" -t sysfs sysfs
+safe_mount "dev" -o bind /dev
+safe_mount "dev/pts" -o bind /dev/pts
+
+# Android specifically requires a tmpfs for shared memory
 mkdir -p "$CHROOT_DIR/dev/shm"
-mount -t tmpfs -o size=256M tmpfs "$CHROOT_DIR/dev/shm"
+safe_mount "dev/shm" -t tmpfs -o size=256M tmpfs
 
-# Bind Android's internal storage for easy file transfer between Termux and the chroot
+# Bind Android's internal storage
 mkdir -p "$CHROOT_DIR/sdcard"
-mount -o bind /storage/emulated/0 "$CHROOT_DIR/sdcard" 2>/dev/null || mount -o bind /sdcard "$CHROOT_DIR/sdcard" 2>/dev/null
+if ! grep -qF " $CHROOT_DIR/sdcard " /proc/mounts; then
+  mount -o bind /storage/emulated/0 "$CHROOT_DIR/sdcard" 2>/dev/null || mount -o bind /sdcard "$CHROOT_DIR/sdcard" 2>/dev/null
+fi
 
 # Force DNS resolution mapping
 echo "nameserver 8.8.8.8" >"$CHROOT_DIR/etc/resolv.conf"
@@ -90,5 +105,4 @@ EOF
 fi
 
 echo "[*] Entering interactive terminal as $USER_NAME..."
-# Drop the -c flag and use standard execution so su handles the login shell and preserves job control
-chroot "$CHROOT_DIR" /usr/bin/env TERM=xterm-256color /bin/su - "$USER_NAME"
+exec script -q -c "chroot \"$CHROOT_DIR\" /bin/login -f \"$USER_NAME\"" /dev/null
