@@ -81,7 +81,8 @@ zsh_add_file "zsh-exports"
 # Dynamically evaluates and imports custom shortcut keywords and command modifications
 zsh_add_file "zsh-aliases"
 
-# zsh_add_file "zsh-prompt"
+# Clipboard sync helper function
+zsh_add_file "zsh-clip-sync"
 
 
 #          ╭──────────────────────────────────────────────────────────╮
@@ -121,3 +122,6 @@ add-zsh-hook chpwd auto_pipenv_shell
 
 # Evaluates the active directory immediately upon core shell initialization
 auto_pipenv_shell
+
+# start daemon to listen to clipboard addition based on system architecture
+init_clip_sync

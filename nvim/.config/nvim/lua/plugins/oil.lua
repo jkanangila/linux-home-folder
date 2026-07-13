@@ -4,19 +4,15 @@ return {
   dependencies = {
     {
       "antosha417/nvim-lsp-file-operations",
-      -- We must pull in plenary and nvim-tree.lua structures as backend helpers
       dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-tree.lua" },
       config = true,
     },
     {
       "AstroNvim/astrocore",
-      ---@type AstroCoreOpts
       opts = {
         mappings = {
           n = {
             ["<leader>o"] = { desc = "   Oil File Explorer" },
-
-            ---@doc Toggle Oil in the directory of the current active buffer
             ["<leader>oo"] = {
               function()
                 local oil = require "oil"
@@ -28,8 +24,6 @@ return {
               end,
               desc = "Toggle Oil (Current Dir)",
             },
-
-            ---@doc Toggle Oil starting from the project root directory
             ["<leader>or"] = {
               function()
                 local oil = require "oil"
@@ -49,7 +43,13 @@ return {
   opts = {
     lsp_file_methods = {
       timeout_ms = 120000,
-      autosave_changes = true, -- Automatically saves the updated python files
+      autosave_changes = true,
+    },
+    view_options = {
+      show_hidden = true,
+      is_hidden_file = function(name, bufnr)
+        return false
+      end,
     },
   },
   lazy = false,
