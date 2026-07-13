@@ -1,17 +1,18 @@
-
 function init_clip_sync() {
-  TERMUX_CLIP="~/.config/clipboard-sync/termux_clip_sync.sh"
-  UBUNTU_CLIP="~/.config/clipboard-sync/ubuntu_clip_sync.sh"
+  # Use $HOME instead of "~" to ensure proper directory path expansion
+  local TERMUX_CLIP="$HOME/.config/clipboard-sync/termux_clip_sync.sh"
+  local UBUNTU_CLIP="$HOME/.config/clipboard-sync/ubuntu_clip_sync.sh"
+
   # 1. Termux Detection: TERMUX_VERSION is uniquely present in Termux environments
   if [[ -n "$TERMUX_VERSION" ]]; then
-      if [[ -f "$TERMUX_CLIP" ]] && ! pgrep -f "termux_clip_sync.sh" > /dev/null; then
+      if [[ -f "$TERMUX_CLIP" ]] && ! pgrep -f "(bash|sh).*termux_clip_sync.sh" > /dev/null; then
           nohup "$TERMUX_CLIP" >/dev/null 2>&1 &
       fi
 
   # 2. Ubuntu Chroot Detection: Excludes Termux, but checks for Android/Termux kernel strings
   #    or PRoot environment variables to differentiate the chroot from a standard desktop PC.
   elif { grep -qiE "android|termux" /proc/version 2>/dev/null || [[ -n "$PROOT_TMP_DIR" ]]; } && [[ -f "$UBUNTU_CLIP" ]]; then
-      if ! pgrep -f "ubuntu_clip_sync.sh" > /dev/null; then
+      if ! pgrep -f "(bash|sh).*ubuntu_clip_sync.sh" > /dev/null; then
           nohup "$UBUNTU_CLIP" >/dev/null 2>&1 &
       fi
 
