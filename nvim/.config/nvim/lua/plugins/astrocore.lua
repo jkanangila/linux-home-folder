@@ -19,7 +19,20 @@ if env.os == "linux" and env.is_wsl then
     },
     cache_enabled = 0,
   }
-elseif env.os == "linux" and (env.is_chroot or env.is_termux) then
+elseif env.os == "linux" and env.is_chroot then
+  clipboard_config = {
+    name = "xclip-headless",
+    copy = {
+      ["+"] = "env DISPLAY=:99.0 xclip -i -selection clipboard",
+      ["*"] = "env DISPLAY=:99.0 xclip -i -selection primary",
+    },
+    paste = {
+      ["+"] = "env DISPLAY=:99.0 xclip -o -selection clipboard",
+      ["*"] = "env DISPLAY=:99.0 xclip -o -selection primary",
+    },
+    cache_enabled = 1,
+  }
+elseif env.os == "linux" and env.is_termux then
   clipboard_config = {
     name = "Termux Clipboard",
     copy = {
