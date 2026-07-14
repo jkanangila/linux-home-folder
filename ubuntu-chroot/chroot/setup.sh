@@ -38,7 +38,7 @@ PACKAGES=(
     libsqlite3-dev libncursesw5-dev xz-utils tk-dev 
     libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev 
     lua5.4 liblua5.4-dev luarocks cargo ripgrep
-    libpq-dev python3-dev gcc xclip nmap
+    libpq-dev python3-dev gcc xclip nmap xvfb
 )
 
 # Filter out already installed apt packages
