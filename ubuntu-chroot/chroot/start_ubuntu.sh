@@ -11,9 +11,14 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 cleanup() {
+  echo "Stopping clipboard sync..."
+  pkill -f "ubuntu_clip_sync.sh"
+  pkill -f "ncat.*8378"
+  pkill -x "Xvfb"
+
   echo -e "\n[*] Cleaning up and safely unmounting filesystems..."
   for mp in sdcard dev/pts dev/shm dev sys proc; do
-    busybox umount "$CHROOT_DIR/$mp" 2>/dev/null || true
+    busybox umount -l "$CHROOT_DIR/$mp" 2>/dev/null || true
   done
   echo "[*] Exited chroot cleanly."
 }
