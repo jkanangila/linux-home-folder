@@ -74,30 +74,27 @@ function zsh_add_starship_prompt() {
 
 # Main routine managing both automated entrance and exit workflows
 function auto_pipenv_shell() {
-    
     # CASE A: Entering a project directory (No active environment detected)
-    if [[ -f "Pipfile" && -z "$PIPENV_ACTIVE" && -z "$VIRTUAL_ENV" ]]; then
-        echo "💡 Pipfile detected. Activating virtual environment..."
+    if [[ -f "Pipfile" && -z "$VIRTUAL_ENV" ]]; then
+        # Find the path to the virtualenv without spawning a subshell
+        local venv_path
+        venv_path=$(pipenv --venv 2>/dev/null)
         
-        # Export the exact absolute path where this shell was spawned on disk
-        export PIPENV_SHELL_ORIGIN_DIR="$PWD"
-        
-        # Initialize the nested project environment
-        pipenv shell
+        if [[ -n "$venv_path" ]]; then
+            echo "💡 Pipfile detected. Activating virtual environment..."
+            export PIPENV_SHELL_ORIGIN_DIR="$PWD"
+            source "$venv_path/bin/activate"
+        fi
         return
     fi
 
-    # CASE B: Exiting a project directory (Active Pipenv environment detected)
-    if [[ -n "$PIPENV_ACTIVE" && -n "$PIPENV_SHELL_ORIGIN_DIR" ]]; then
+    # CASE B: Exiting a project directory (Active environment detected)
+    if [[ -n "$VIRTUAL_ENV" && -n "$PIPENV_SHELL_ORIGIN_DIR" ]]; then
         # Check if the user's current directory is NO LONGER inside the project root
         if [[ "$PWD" != "$PIPENV_SHELL_ORIGIN_DIR"* ]]; then
             echo "👋 Left project directory. Deactivating virtual environment..."
-            
-            # Clean up the reference path variable prior to shutdown
             unset PIPENV_SHELL_ORIGIN_DIR
-            
-            # Gracefully close the nested shell process, returning to the parent
-            exit
+            deactivate
         fi
     fi
 }
