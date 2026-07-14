@@ -21,14 +21,14 @@ if env.os == "linux" and env.is_wsl then
   }
 elseif env.os == "linux" and env.is_chroot then
   clipboard_config = {
-    name = "xclip-headless",
+    name = "lemonade",
     copy = {
-      ["+"] = "env DISPLAY=:99.0 xclip -i -selection clipboard",
-      ["*"] = "env DISPLAY=:99.0 xclip -i -selection primary",
+      ["+"] = { "lemonade", "copy" },
+      ["*"] = { "lemonade", "copy" },
     },
     paste = {
-      ["+"] = "env DISPLAY=:99.0 xclip -o -selection clipboard",
-      ["*"] = "env DISPLAY=:99.0 xclip -o -selection primary",
+      ["+"] = { "lemonade", "paste" },
+      ["*"] = { "lemonade", "paste" },
     },
     cache_enabled = 1,
   }

@@ -1,23 +1,15 @@
+# Function to auto-start Lemonade server in Termux
 function init_clip_sync() {
-  local TERMUX_CLIP="$HOME/.config/clipboard-sync/termux_clip_sync.sh"
-  local UBUNTU_CLIP="$HOME/.config/clipboard-sync/ubuntu_clip_sync.sh"
-
-  # 1. Termux Detection
-  if [[ -n "$TERMUX_VERSION" ]]; then
-      if [[ -f "$TERMUX_CLIP" ]] && ! pgrep -f "(bash|sh).*termux_clip_sync.sh" > /dev/null; then
-          nohup bash "$TERMUX_CLIP" >/dev/null 2>&1 &
-      fi
-
-  # 2. Ubuntu Chroot CLI Detection
-  elif { grep -qiE "android|termux" /proc/version 2>/dev/null || [[ -n "$PROOT_TMP_DIR" ]]; } && [[ -f "$UBUNTU_CLIP" ]]; then
-      if ! pgrep -f "(bash|sh).*ubuntu_clip_sync.sh" > /dev/null; then
-          # Ensure a headless virtual display is running for xclip
-          if ! pgrep -x "Xvfb" > /dev/null; then
-              Xvfb :99 -screen 0 1024x768x16 >/dev/null 2>&1 &
-              sleep 0.5
-          fi
-          export DISPLAY=:99.0
-          nohup bash "$UBUNTU_CLIP" >/dev/null 2>&1 &
-      fi
-  fi
+  # Check if we are running inside the Termux environment
+    if [ -n "$TERMUX_VERSION" ] || [[ "$PREFIX" == *com.termux* ]]; then
+        # Check if a lemonade server process is already running
+        if ! pgrep -x "lemonade" > /dev/null; then
+            echo "Starting Lemonade clipboard server in background..."
+            # Starts server using config from ~/.config/lemonade.toml
+            lemonade server > /dev/null 2>&1 & 
+            disown
+        else
+            echo "Lemonade server is already running."
+        fi
+    fi
 }
