@@ -23,14 +23,16 @@ elseif env.os == "linux" and env.is_chroot then
   clipboard_config = {
     name = "lemonade",
     copy = {
-      ["+"] = { "lemonade", "copy" },
-      ["*"] = { "lemonade", "copy" },
+      -- Redirect stdout and stderr to /dev/null for silent copying
+      ["+"] = { "sh", "-c", "lemonade copy > /dev/null 2>&1" },
+      ["*"] = { "sh", "-c", "lemonade copy > /dev/null 2>&1" },
     },
     paste = {
-      ["+"] = { "lemonade", "paste" },
-      ["*"] = { "lemonade", "paste" },
+      -- Suppress stderr logs, but preserve stdout (the clipboard data)
+      ["+"] = { "sh", "-c", "lemonade paste 2> /dev/null" },
+      ["*"] = { "sh", "-c", "lemonade paste 2> /dev/null" },
     },
-    cache_enabled = 1,
+cache_enabled = 1,
   }
 elseif env.os == "linux" and env.is_termux then
   clipboard_config = {

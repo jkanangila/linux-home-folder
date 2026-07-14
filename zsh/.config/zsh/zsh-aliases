@@ -63,3 +63,12 @@ alias lg='lazygit'
 alias ubuntu="su -c 'exec /data/data/com.termux/files/home/chroot/start_ubuntu.sh'"
 alias ubuntu-root="su -c 'exec /data/data/com.termux/files/home/chroot/root_ubuntu.sh'"
 alias ubuntu-stop="su -c 'exec /data/data/com.termux/files/home/chroot/stop_ubuntu.sh'"
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                         Lemonade                         │
+#          ╰──────────────────────────────────────────────────────────╯
+# Silence lemonade copy
+alias lemonade-copy="lemonade copy > /dev/null 2>&1"
+
+# Silence lemonade paste (only allows stdout containing the actual pasted text)
+alias lemonade-paste="lemonade paste 2> /dev/null"
