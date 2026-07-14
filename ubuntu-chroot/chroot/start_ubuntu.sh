@@ -17,6 +17,7 @@ cleanup() {
   pkill -x "Xvfb"
 
   echo -e "\n[*] Cleaning up and safely unmounting filesystems..."
+  # dev/pts and dev/shm must be unmounted BEFORE dev (LIFO order)
   for mp in sdcard dev/pts dev/shm dev sys proc; do
     busybox umount -l "$CHROOT_DIR/$mp" 2>/dev/null || true
   done
@@ -50,7 +51,7 @@ safe_mount "sys" -t sysfs sysfs
 safe_mount "dev" -o bind /dev
 safe_mount "dev/pts" -o bind /dev/pts
 
-# Android specifically requires a tmpfs for shared memory
+# Android specifically requires a tmpfs for shared memory (and Xvfb layout)
 mkdir -p "$CHROOT_DIR/dev/shm"
 safe_mount "dev/shm" -t tmpfs -o size=256M tmpfs
 
@@ -59,6 +60,11 @@ mkdir -p "$CHROOT_DIR/sdcard"
 if ! grep -qF " $CHROOT_DIR/sdcard " /proc/mounts; then
   mount -o bind /storage/emulated/0 "$CHROOT_DIR/sdcard" 2>/dev/null || mount -o bind /sdcard "$CHROOT_DIR/sdcard" 2>/dev/null
 fi
+
+# Force correct permissions on /tmp inside the chroot so Xvfb can create its sockets
+chmod 1777 "$CHROOT_DIR/tmp"
+mkdir -p "$CHROOT_DIR/tmp/.X11-unix"
+chmod 1777 "$CHROOT_DIR/tmp/.X11-unix"
 
 # Force DNS resolution mapping
 echo "nameserver 8.8.8.8" >"$CHROOT_DIR/etc/resolv.conf"
@@ -110,4 +116,5 @@ EOF
 fi
 
 echo "[*] Entering interactive terminal as $USER_NAME..."
-exec script -q -c "chroot \"$CHROOT_DIR\" /bin/login -f \"$USER_NAME\"" /dev/null
+
+script -q -c "chroot \"$CHROOT_DIR\" /bin/login -f \"$USER_NAME\"" /dev/null
