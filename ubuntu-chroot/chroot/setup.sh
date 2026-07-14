@@ -28,17 +28,62 @@ echo "1 & 2. Installing System Utilities, XDG-utils & Locales"
 echo "========================================="
 apt-get update
 
-# Array of needed core apt packages
+# Array of needed core apt packages - logically sorted by dependency layer
 PACKAGES=(
-    sudo curl wget git zsh locales build-essential 
-    software-properties-common apt-transport-https 
-    ca-certificates gnupg tzdata unzip tar pkg-config 
-    cmake ninja-build gettext fontconfig stow xdg-utils 
-    libssl-dev zlib1g-dev libbz2-dev libreadline-dev 
-    libsqlite3-dev libncursesw5-dev xz-utils tk-dev 
-    libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev 
-    lua5.4 liblua5.4-dev luarocks cargo ripgrep
-    libpq-dev python3-dev gcc xclip nmap xvfb
+    # --- Layer 1: Core System & Network Bootstrapping ---
+    apt-transport-https
+    ca-certificates
+    gnupg
+    software-properties-common
+    wget
+    curl
+    git
+    locales
+    tzdata
+
+    # --- Layer 2: Core Build Toolchain & Compilers ---
+    build-essential
+    gcc
+    pkg-config
+    cmake
+    ninja-build
+    gettext
+    cargo
+    golang
+
+    # --- Layer 3: System Headers, Compression & Library Dependencies ---
+    libssl-dev
+    zlib1g-dev
+    libbz2-dev
+    libreadline-dev
+    libsqlite3-dev
+    libncursesw5-dev
+    libxml2-dev
+    libxmlsec1-dev
+    libffi-dev
+    liblzma-dev
+    liblua5.4-dev
+    libpq-dev
+    python3-dev
+
+    # --- Layer 4: Shell, Runtimes & Interpreter Tooling ---
+    sudo
+    zsh
+    tar
+    unzip
+    xz-utils
+    tk-dev
+    lua5.4
+    luarocks
+
+    # --- Layer 5: Terminal Environment, Fonts & X11/UI Helpers ---
+    fontconfig
+    stow
+    xdg-utils
+    ripgrep
+    xclip
+    nmap
+    xvfb
 )
 
 # Filter out already installed apt packages
@@ -182,9 +227,25 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init -)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Go/Lemonade paths
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
 LINES
 else
     echo ".zshrc paths are already configured."
+fi
+
+# Source paths for this subshell instance
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+echo "-> 9b. Installing Lemonade via Go"
+if ! command -v lemonade &>/dev/null; then
+    echo "Installing lemonade..."
+    go install github.com/lemonade-command/lemonade@latest
+else
+    echo "Lemonade is already installed at $(command -v lemonade)."
 fi
 
 echo "-> 10. Installing Pyenv and Python 3.12.3"

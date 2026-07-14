@@ -1,8 +1,8 @@
 #!/bin/sh
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │              TERMINAL HISTORY CONFIGURATION              │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │              TERMINAL HISTORY CONFIGURATION              │
+#           ╰──────────────────────────────────────────────────────────╯
 # Only set history if we are running in Zsh (since these are Zsh-specific variables)
 if [ -n "$ZSH_VERSION" ]; then
     HISTFILE="$HOME"/.zsh_history 
@@ -11,9 +11,9 @@ if [ -n "$ZSH_VERSION" ]; then
     setopt appendhistory 
 fi
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │          SYSTEM PATHS AND ENVIRONMENT SETTINGS           │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │          SYSTEM PATHS AND ENVIRONMENT SETTINGS           │
+#           ╰──────────────────────────────────────────────────────────╯
 # Updates the search path to include local binaries and standard system folders
 PATH="$PATH:$HOME/.local/bin:/usr/bin:/usr/local/bin"
 export PATH
@@ -22,9 +22,9 @@ export PATH
 export MANWIDTH=999
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │       PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │       PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
+#           ╰──────────────────────────────────────────────────────────╯
 # Only configure pyenv if its directory exists
 if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
@@ -41,9 +41,9 @@ if [ -d "$HOME/.pyenv" ]; then
 fi
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │         NVM CONFIGURATION (NODE VERSION MANAGER)         │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │          NVM CONFIGURATION (NODE VERSION MANAGER)          │
+#           ╰──────────────────────────────────────────────────────────╯
 # Only configure NVM if the directory exists
 if [ -d "$HOME/.nvm" ]; then
     export NVM_DIR="$HOME/.nvm" 
@@ -56,18 +56,18 @@ if [ -d "$HOME/.nvm" ]; then
 fi
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │     PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)     │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │     PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)     │
+#           ╰──────────────────────────────────────────────────────────╯
 # Forces Pipenv to use project-local environments if pipenv is installed
 if command -v pipenv >/dev/null 2>&1; then
     export PIPENV_VENV_IN_PROJECT=1
 fi
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │        RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │        RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
+#           ╰──────────────────────────────────────────────────────────╯
 # Check if rbenv directory exists before adding to PATH and initializing
 if [ -d "$HOME/.rbenv" ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
@@ -78,9 +78,9 @@ if [ -d "$HOME/.rbenv" ]; then
 fi
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │ZOxIDE (a smarter cd command, inspired by z and autojump) │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │ZOxIDE (a smarter cd command, inspired by z and autojump) │
+#           ╰──────────────────────────────────────────────────────────╯
 # Only initialize zoxide if the binary is installed
 if command -v zoxide >/dev/null 2>&1; then
     # Ensures zsh-specific init is only called if inside a zsh shell
@@ -92,13 +92,23 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │                       source cargo env                   │
-#          ╰──────────────────────────────────────────────────────────╯
+#           ╭──────────────────────────────────────────────────────────╮
+#           │                       source cargo env                   │
+#           ╰──────────────────────────────────────────────────────────╯
 # Source cargo configuration files only if they exist and are readable
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Add cargo bin to PATH only if it's a valid directory
 if [ -d "$HOME/.cargo/bin" ]; then
     export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+
+#           ╭──────────────────────────────────────────────────────────╮
+#           │                   GOLANG CONFIGURATION                   │
+#           ╰──────────────────────────────────────────────────────────╯
+# Add go bin to PATH if the go runtime compiler is installed on the system
+if command -v go >/dev/null 2>&1; then
+    export GOPATH="$HOME/go"
+    export PATH="$GOPATH/bin:$PATH"
 fi
