@@ -1,7 +1,7 @@
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
---       as this provides autocomplete and documentation while editing
+--        as this provides autocomplete and documentation while editing
 
 local env = require "env"
 -- Determine the correct clipboard configuration based on the environment
@@ -32,7 +32,7 @@ elseif env.os == "linux" and env.is_chroot then
       ["+"] = { "sh", "-c", "lemonade paste 2> /dev/null" },
       ["*"] = { "sh", "-c", "lemonade paste 2> /dev/null" },
     },
-cache_enabled = 1,
+    cache_enabled = 1,
   }
 elseif env.os == "linux" and env.is_termux then
   clipboard_config = {
@@ -90,8 +90,13 @@ return {
         number = true, -- sets vim.opt.number
         spell = false, -- sets vim.opt.spell
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
-        wrap = false, -- sets vim.opt.wrap
+        wrap = false, -- sets vim.opt.wrap (Required: horizontal scroll won't work on wrapped lines!)
         clipboard = "unnamedplus", -- standard desktop clipboard (the one used by Ctrl+C / Ctrl+V)
+
+        -- Scrolling & Touch Settings
+        mouse = "a",        -- Enable full mouse support (lets Termux pass touch gestures to Neovim)
+        sidescroll = 1,     -- Scroll horizontal column-by-column for smoother panning
+        sidescrolloff = 8,  -- Keeps the cursor centered with an 8-character buffer on sides
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
@@ -109,10 +114,8 @@ return {
     -- Mappings can be configured through AstroCore as well.
     -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
     mappings = {
-      -- first key is the mode
+      -- Normal mode mappings
       n = {
-        -- second key is the lefthand side of the map
-
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
@@ -133,12 +136,21 @@ return {
         -- Custom binding for our native-safe LSP restart command
         ["<Leader>ln"] = { "<cmd>lsp restart<cr>", desc = "Restart LSP" },
 
-        -- tables with just a `desc` key will be registered with which-key if it's installed
-        -- this is useful for naming menus
-        -- ["<Leader>b"] = { desc = "Buffers" },
+        -- Shift + Scroll Wheel mappings for horizontal scrolling (5 columns at a time)
+        ["<S-ScrollWheelUp>"]   = { "5zh", desc = "Scroll screen left" },
+        ["<S-ScrollWheelDown>"] = { "5zl", desc = "Scroll screen right" },
 
-        -- setting a mapping to false will disable it
-        -- ["<C-S>"] = false,
+        -- Mobile Trackpad / Swiping horizontal mouse events
+        ["<ScrollWheelLeft>"]   = { "5zh", desc = "Scroll left" },
+        ["<ScrollWheelRight>"]  = { "5zl", desc = "Scroll right" },
+      },
+
+      -- Visual mode mappings (keeps scrolling functional without breaking active selections)
+      v = {
+        ["<S-ScrollWheelUp>"]   = { "5zh" },
+        ["<S-ScrollWheelDown>"] = { "5zl" },
+        ["<ScrollWheelLeft>"]   = { "5zh" },
+        ["<ScrollWheelRight>"]  = { "5zl" },
       },
     },
   },
