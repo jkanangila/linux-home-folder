@@ -18,7 +18,7 @@ return {
     formatting = {
       format_on_save = {
         enabled = true,
-        allow_filetypes = { "python" }, -- Explicitly ensure python triggers formatting
+        allow_filetypes = { "python", "json", "js", "jsx", "css", "scss", "bash", "lua" }, -- Explicitly ensure python triggers formatting
         ignore_filetypes = {},
       },
       disabled = {},
