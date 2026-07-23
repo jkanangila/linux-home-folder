@@ -59,7 +59,8 @@ return {
             analysis = {
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
-              typeCheckingMode = "standard",
+              -- Options: "off", "basic", "standard", "recommended", "all"
+              typeCheckingMode = "recommended",
               strictDictionaryInference = true,
               -- FIXED: Removed `ignore = { "*" }` which was disabling all type checking.
               diagnosticSeverityOverrides = {
@@ -69,6 +70,8 @@ return {
                 reportUnusedVariable = "none",
                 reportUnusedClass = "none",
                 reportUnusedFunction = "none",
+                -- Forces errors when instantiating or defining incomplete ABCs
+                reportAbstractUsage = "error",
               },
             },
           },
