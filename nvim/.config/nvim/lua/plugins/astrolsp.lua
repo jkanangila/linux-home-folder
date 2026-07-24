@@ -59,10 +59,9 @@ return {
             analysis = {
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
-              -- Options: "off", "basic", "standard", "recommended", "all"
-              typeCheckingMode = "recommended",
+              typeCheckingMode = "standard",
               strictDictionaryInference = true,
-              -- FIXED: Removed `ignore = { "*" }` which was disabling all type checking.
+
               diagnosticSeverityOverrides = {
                 reportGeneralTypeIssues = "error",
                 -- Let Ruff handle unused imports/variables cleanly without duplicate diagnostics
@@ -70,8 +69,6 @@ return {
                 reportUnusedVariable = "none",
                 reportUnusedClass = "none",
                 reportUnusedFunction = "none",
-                -- Forces errors when instantiating or defining incomplete ABCs
-                reportAbstractUsage = "error",
               },
             },
           },
