@@ -41,7 +41,10 @@ return {
           show_file_highlights = true,
 
           -- Don't apply Git highlighting to directories.
-          show_directory_highlights = false,
+          show_directory_symbols = false,
+          show_file_symbols = false,
+
+          show_branch = true, -- Show current Git branch in oil buffers
 
           -- Include files ignored by Git in Oil's Git information.
           show_ignored_files = true,
