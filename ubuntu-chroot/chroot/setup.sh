@@ -81,6 +81,7 @@ PACKAGES=(
     stow
     xdg-utils
     ripgrep
+    fd-find
     xclip
     nmap
     xvfb
@@ -120,7 +121,7 @@ if ! command -v nvim &>/dev/null; then
     curl -LO "https://github.com/neovim/neovim/releases/download/stable/nvim-${NV_ARCH}.tar.gz"
     tar -C /opt -xzf nvim-${NV_ARCH}.tar.gz
     ln -sf /opt/nvim-${NV_ARCH}/bin/nvim /usr/local/bin/nvim
-    rm nvim-${NV_ARCH}.tar.gz
+    rm -f nvim-${NV_ARCH}.tar.gz
 else
     echo "Neovim is already installed at $(command -v nvim)."
 fi
@@ -221,7 +222,7 @@ echo "-> 9. Configuring .zshrc paths"
 if [ ! -f ~/.zshrc ] || ! grep -q "PYENV_ROOT" ~/.zshrc; then
     cat << 'LINES' >> ~/.zshrc
 export LANG=en_US.UTF-8
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
@@ -238,7 +239,7 @@ fi
 
 # Source paths for this subshell instance
 export GOPATH="$HOME/go"
-export PATH="$GOPATH/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$GOPATH/bin:$PATH"
 
 echo "-> 9b. Installing Lemonade via Go"
 if ! command -v lemonade &>/dev/null; then
@@ -258,7 +259,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # Check if specific pyenv version exists before compiling
-if ! pyenv versions --bare | grep -q "3.12.3"; then
+if ! pyenv versions --bare | grep -q "^3\.12\.3$"; then
     pyenv install -s 3.12.3
 fi
 pyenv global 3.12.3
@@ -286,7 +287,7 @@ fi
 
 # Check and install global npm modules individually
 for mod in yarn neovim tree-sitter-cli; do
-    if ! command -v "$mod" &>/dev/null && ! npm list -g "$mod" >/dev/null 2>&1; then
+    if ! command -v "$mod" &>/dev/null; then
         npm install -g "$mod"
     else
         echo "NPM global module '$mod' is already present."
@@ -300,14 +301,15 @@ fi
 
 mkdir -p "$HOME/.config"
 
-# Safe backups before running GNU Stow
+# Safe backups before running GNU Stow (including requirements.txt)
 for item in \
     "$HOME/.zshrc" \
     "$HOME/.config/zsh" \
     "$HOME/.tmux.config" \
     "$HOME/.config/nvim" \
     "$HOME/.config/lazygit" \
-    "$HOME/.gitconfig"; \
+    "$HOME/.gitconfig" \
+    "$HOME/requirements.txt"; \
 do 
     if [ -e "$item" ] || [ -L "$item" ]; then 
         if [ -L "$item" ] && ls -l "$item" | grep -q "dotfiles"; then
@@ -319,12 +321,27 @@ done
 
 cd "$HOME/dotfiles"
 for package in lazygit requirements gitconfig nvim tmux zsh; do
-    stow "$package"
+    stow --target="$HOME" "$package"
 done
 
 # Final PIP Requirements run
 if [ -f "$HOME/requirements.txt" ]; then 
     pip install -r "$HOME/requirements.txt"
+fi
+
+echo "-> 13. Setting up Rust / Cargo CLI tools and local binary aliases"
+mkdir -p "$HOME/.local/bin"
+
+if command -v fdfind &>/dev/null && [ ! -L "$HOME/.local/bin/fd" ]; then
+    ln -s "$(which fdfind)" "$HOME/.local/bin/fd"
+    echo "Symlinked fd -> $(which fdfind)"
+fi
+
+if ! command -v grip-grab &>/dev/null; then
+    echo "Installing grip-grab via cargo..."
+    cargo install grip-grab
+else
+    echo "grip-grab is already installed at $(command -v grip-grab)."
 fi
 
 EOF
