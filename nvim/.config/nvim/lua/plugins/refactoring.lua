@@ -1,70 +1,57 @@
 return {
   {
     "ThePrimeagen/refactoring.nvim",
-    lazy = false, -- Keep loaded to protect visual mode bindings
+    lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "lewis6991/async.nvim",
     },
-    config = function()
-      require("refactoring").setup({})
-    end,
+    config = function() require("refactoring").setup {} end,
     keys = {
-      -- 1. Extract block/function to a BRAND NEW FILE (with post-save trigger)
+      -- Helper function to safely save normal file buffers
       {
         "<leader>re",
         function()
-          -- Use a deferred schedule to execute the save command immediately after refactoring processes
+          require("refactoring").refactor "Extract Function To File"
           vim.schedule(function()
-            vim.cmd("wa")
+            if vim.bo.buftype == "" and vim.bo.modified then vim.cmd "silent! write" end
           end)
-          return require("refactoring").extract_func_to_file()
         end,
         mode = "v",
-        expr = true,
         desc = "Extract selection to separate file",
       },
-
-      -- 2. Extract block/function within the SAME FILE
       {
         "<leader>rf",
         function()
+          require("refactoring").refactor "Extract Function"
           vim.schedule(function()
-            vim.cmd("w")
+            if vim.bo.buftype == "" and vim.bo.modified then vim.cmd "silent! write" end
           end)
-          return require("refactoring").extract_func()
         end,
         mode = "v",
-        expr = true,
         desc = "Extract function within file",
       },
-
-      -- 3. Extract code fragment into a variable
       {
         "<leader>rv",
         function()
+          require("refactoring").refactor "Extract Variable"
           vim.schedule(function()
-            vim.cmd("w")
+            if vim.bo.buftype == "" and vim.bo.modified then vim.cmd "silent! write" end
           end)
-          return require("refactoring").extract_var()
         end,
         mode = "v",
-        expr = true,
         desc = "Extract selection to variable",
       },
-
-      -- 4. Inline an existing variable
       {
         "<leader>ri",
         function()
+          require("refactoring").refactor "Inline Variable"
           vim.schedule(function()
-            vim.cmd("w")
+            if vim.bo.buftype == "" and vim.bo.modified then vim.cmd "silent! write" end
           end)
-          return require("refactoring").inline_var()
         end,
         mode = { "n", "v" },
-        expr = true,
         desc = "Inline target variable",
       },
     },
