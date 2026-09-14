@@ -315,6 +315,7 @@ for item in \
     "$HOME/.tmux.config" \
     "$HOME/.config/nvim" \
     "$HOME/.config/lazygit" \
+    "$HOME/.config/cspell" \
     "$HOME/.gitconfig" \
     "$HOME/requirements.txt"; \
 do 
@@ -327,7 +328,7 @@ do
 done
 
 cd "$HOME/dotfiles"
-for package in lazygit requirements gitconfig nvim tmux zsh; do
+for package in lazygit requirements gitconfig nvim tmux zsh cspell; do
     stow --target="$HOME" "$package"
 done
 

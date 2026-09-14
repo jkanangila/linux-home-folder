@@ -1,0 +1,59 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "dictionaries": [
+    "user",
+    "programming",
+    "python",
+    "python-ecosystem",
+    "linux",
+    "neovim-ecosystem",
+    "general-software",
+    "git",
+    "architecture",
+    "acronyms"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "user",
+      "path": "./dictionaries/user.txt"
+    },
+    {
+      "name": "programming",
+      "path": "./dictionaries/programming.txt"
+    },
+    {
+      "name": "python",
+      "path": "./dictionaries/python.txt"
+    },
+    {
+      "name": "python-ecosystem",
+      "path": "./dictionaries/python-ecosystem.txt"
+    },
+    {
+      "name": "linux",
+      "path": "./dictionaries/linux.txt"
+    },
+    {
+      "name": "neovim-ecosystem",
+      "path": "./dictionaries/neovim-ecosystem.txt"
+    },
+    {
+      "name": "general-software",
+      "path": "./dictionaries/general-software.txt"
+    },
+    {
+      "name": "git",
+      "path": "./dictionaries/git.txt"
+    },
+    {
+      "name": "architecture",
+      "path": "./dictionaries/architecture.txt"
+    },
+    {
+      "name": "acronyms",
+      "path": "./dictionaries/acronyms.txt"
+    }
+  ]
+}

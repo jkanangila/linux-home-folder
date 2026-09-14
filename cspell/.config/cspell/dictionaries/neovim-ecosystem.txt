@@ -1,0 +1,15 @@
+AstroNvim
+LazyVim
+Neovim
+nvim
+Lua
+LuaLS
+LSP
+none-ls
+null-ls
+Tree-sitter
+treesitter
+Telescope
+Mason
+Oil
+oil.nvim
