@@ -1,10 +1,13 @@
 dataclass
 dataclasses
+classmethod
+abstractmethod
 decorator
 decorators
 ducktyping
 enum
 enums
+strenum
 fixture
 fixtures
 iterable

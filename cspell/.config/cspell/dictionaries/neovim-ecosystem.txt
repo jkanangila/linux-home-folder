@@ -13,3 +13,6 @@ Telescope
 Mason
 Oil
 oil.nvim
+astrocore
+astroslp
+keymap
