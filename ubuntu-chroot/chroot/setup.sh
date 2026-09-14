@@ -65,6 +65,8 @@ PACKAGES=(
     liblua5.4-dev
     libpq-dev
     python3-dev
+    libsecret-1-0
+    libsecret-1-dev
 
     # --- Layer 4: Shell, Runtimes & Interpreter Tooling ---
     sudo
@@ -85,6 +87,11 @@ PACKAGES=(
     xclip
     nmap
     xvfb
+    libgles2
+    libgles2-mesa-dev
+    libgl1-mesa-dri
+    libglx-mesa0
+    mesa-utils
 )
 
 # Filter out already installed apt packages

@@ -1,14 +1,14 @@
 #!/bin/sh
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │              TERMINAL HISTORY CONFIGURATION              │
+#           │               TERMINAL HISTORY CONFIGURATION             │
 #           ╰──────────────────────────────────────────────────────────╯
 # Only set history if we are running in Zsh (since these are Zsh-specific variables)
 if [ -n "$ZSH_VERSION" ]; then
-    HISTFILE="$HOME"/.zsh_history 
-    HISTSIZE=1000000 
+    HISTFILE="$HOME"/.zsh_history
+    HISTSIZE=1000000
     SAVEHIST=1000000
-    setopt appendhistory 
+    setopt appendhistory
 fi
 
 #           ╭──────────────────────────────────────────────────────────╮
@@ -23,12 +23,12 @@ export MANWIDTH=999
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │       PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
+#           │        PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
 #           ╰──────────────────────────────────────────────────────────╯
 # Only configure pyenv if its directory exists
 if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
-    
+
     # Adds pyenv to PATH if the 'pyenv' command is not already recognized
     if ! command -v pyenv >/dev/null 2>&1; then
         export PATH="$PYENV_ROOT/bin:$PATH"
@@ -42,22 +42,22 @@ fi
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │          NVM CONFIGURATION (NODE VERSION MANAGER)          │
+#           │          NVM CONFIGURATION (NODE VERSION MANAGER)        │
 #           ╰──────────────────────────────────────────────────────────╯
 # Only configure NVM if the directory exists
 if [ -d "$HOME/.nvm" ]; then
-    export NVM_DIR="$HOME/.nvm" 
-    
+    export NVM_DIR="$HOME/.nvm"
+
     # Checks if the core NVM script exists and is not empty, then loads it
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
     # Checks if the auto-completion script exists, then loads it
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 fi
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │     PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)     │
+#           │      PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)    │
 #           ╰──────────────────────────────────────────────────────────╯
 # Forces Pipenv to use project-local environments if pipenv is installed
 if command -v pipenv >/dev/null 2>&1; then
@@ -66,12 +66,12 @@ fi
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │        RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
+#           │         RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
 #           ╰──────────────────────────────────────────────────────────╯
 # Check if rbenv directory exists before adding to PATH and initializing
 if [ -d "$HOME/.rbenv" ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
-    
+
     if command -v rbenv >/dev/null 2>&1; then
         eval "$(rbenv init -)"
     fi
@@ -93,7 +93,7 @@ fi
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │                       source cargo env                   │
+#           │                        source cargo env                  │
 #           ╰──────────────────────────────────────────────────────────╯
 # Source cargo configuration files only if they exist and are readable
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
@@ -105,7 +105,7 @@ fi
 
 
 #           ╭──────────────────────────────────────────────────────────╮
-#           │                   GOLANG CONFIGURATION                   │
+#           │                    GOLANG CONFIGURATION                  │
 #           ╰──────────────────────────────────────────────────────────╯
 # Add go bin to PATH if the go runtime compiler is installed on the system
 if command -v go >/dev/null 2>&1; then
@@ -113,7 +113,45 @@ if command -v go >/dev/null 2>&1; then
     export PATH="$GOPATH/bin:$PATH"
 fi
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │                      Ollama Config                       │
-#          ╰──────────────────────────────────────────────────────────╯
+
+#           ╭──────────────────────────────────────────────────────────╮
+#           │                     Ollama Config                        │
+#           ╰──────────────────────────────────────────────────────────╯
 export OLLAMA_HOST=http://127.0.0.1:11434
+
+
+#           ╭──────────────────────────────────────────────────────────╮
+#           │          MESA & OPENGL OVERRIDES (WSL / CHROOT)          │
+#           ╰──────────────────────────────────────────────────────────╯
+# Forces Mesa software rendering only when running inside WSL or a Chroot 
+# AND when Mesa drivers are installed.
+_is_wsl_or_chroot() {
+    # Check for WSL via kernel release string or WSL environment variables
+    if uname -r 2>/dev/null | grep -qi "microsoft" || [ -n "$WSL_DISTRO_NAME" ]; then
+        return 0
+    fi
+    # Check for chroot (inode difference between / and /proc/1/root if available)
+    if [ -r /proc/1/root ] && [ "$(stat -c %i / 2>/dev/null)" != "$(stat -c %i /proc/1/root 2>/dev/null)" ]; then
+        return 0
+    fi
+    return 1
+}
+
+_has_mesa_installed() {
+    # Verify presence of core Mesa/GLES packages via dpkg
+    if command -v dpkg >/dev/null 2>&1; then
+        dpkg -s libgles2 >/dev/null 2>&1 || \
+        dpkg -s libgl1-mesa-dri >/dev/null 2>&1 || \
+        dpkg -s libglx-mesa0 >/dev/null 2>&1
+    else
+        return 1
+    fi
+}
+
+if _is_wsl_or_chroot && _has_mesa_installed; then
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export MESA_LOADER_DRIVER_OVERRIDE=llvmpipe
+fi
+
+# Clean up helper functions to keep environment clean
+unset -f _is_wsl_or_chroot _has_mesa_installed
