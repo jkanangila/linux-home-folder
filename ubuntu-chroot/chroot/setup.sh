@@ -293,7 +293,7 @@ if ! command -v node &>/dev/null; then
 fi
 
 # Check and install global npm modules individually
-for mod in yarn neovim tree-sitter-cli cspell; do
+for mod in yarn neovim tree-sitter-cli cspell cspell/cspell-json-reporter; do
     if ! command -v "$mod" &>/dev/null; then
         npm install -g "$mod"
     else
