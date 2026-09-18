@@ -18,14 +18,13 @@ return {
     formatting = {
       format_on_save = {
         enabled = true,
-        allow_filetypes = { "python", "json", "js", "jsx", "css", "scss", "bash", "lua" }, -- Explicitly ensure python triggers formatting
         ignore_filetypes = {},
       },
       disabled = {},
       timeout_ms = 120000,
     },
     -- Explicitly tell AstroLSP to look for these servers
-    servers = { "basedpyright", "ruff" },
+    servers = { "basedpyright", "ruff", "jinja_lsp" },
     -- customize language server configuration passed to `vim.lsp.config`
     config = {
       -- ─── RUFF CONFIGURATION ────────────────────────────────────────────────
@@ -73,6 +72,9 @@ return {
             },
           },
         },
+      },
+      jinja_lsp = {
+        filetypes = { "jinja" },
       },
     },
     handlers = {},

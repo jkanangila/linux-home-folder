@@ -72,15 +72,10 @@ return {
     },
     -- passed to `vim.filetype.add`
     filetypes = {
-      -- see `:h vim.filetype.add` for usage
       extension = {
-        foo = "fooscript",
-      },
-      filename = {
-        [".foorc"] = "fooscript",
-      },
-      pattern = {
-        [".*/etc/foo/.*"] = "fooscript",
+        j2 = "jinja",
+        jinja = "jinja",
+        jinja2 = "jinja",
       },
     },
     -- vim options can be configured here
@@ -94,9 +89,9 @@ return {
         clipboard = "unnamedplus", -- standard desktop clipboard (the one used by Ctrl+C / Ctrl+V)
 
         -- Scrolling & Touch Settings
-        mouse = "a",        -- Enable full mouse support (lets Termux pass touch gestures to Neovim)
-        sidescroll = 1,     -- Scroll horizontal column-by-column for smoother panning
-        sidescrolloff = 8,  -- Keeps the cursor centered with an 8-character buffer on sides
+        mouse = "a", -- Enable full mouse support (lets Termux pass touch gestures to Neovim)
+        sidescroll = 1, -- Scroll horizontal column-by-column for smoother panning
+        sidescrolloff = 8, -- Keeps the cursor centered with an 8-character buffer on sides
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
@@ -107,9 +102,7 @@ return {
     },
 
     -- Register custom vim user commands
-    commands = {
-
-    },
+    commands = {},
 
     -- Mappings can be configured through AstroCore as well.
     -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
@@ -137,20 +130,20 @@ return {
         ["<Leader>ln"] = { "<cmd>lsp restart<cr>", desc = "Restart LSP" },
 
         -- Shift + Scroll Wheel mappings for horizontal scrolling (5 columns at a time)
-        ["<S-ScrollWheelUp>"]   = { "5zh", desc = "Scroll screen left" },
+        ["<S-ScrollWheelUp>"] = { "5zh", desc = "Scroll screen left" },
         ["<S-ScrollWheelDown>"] = { "5zl", desc = "Scroll screen right" },
 
         -- Mobile Trackpad / Swiping horizontal mouse events
-        ["<ScrollWheelLeft>"]   = { "5zh", desc = "Scroll left" },
-        ["<ScrollWheelRight>"]  = { "5zl", desc = "Scroll right" },
+        ["<ScrollWheelLeft>"] = { "5zh", desc = "Scroll left" },
+        ["<ScrollWheelRight>"] = { "5zl", desc = "Scroll right" },
       },
 
       -- Visual mode mappings (keeps scrolling functional without breaking active selections)
       v = {
-        ["<S-ScrollWheelUp>"]   = { "5zh" },
+        ["<S-ScrollWheelUp>"] = { "5zh" },
         ["<S-ScrollWheelDown>"] = { "5zl" },
-        ["<ScrollWheelLeft>"]   = { "5zh" },
-        ["<ScrollWheelRight>"]  = { "5zl" },
+        ["<ScrollWheelLeft>"] = { "5zh" },
+        ["<ScrollWheelRight>"] = { "5zl" },
       },
     },
   },
