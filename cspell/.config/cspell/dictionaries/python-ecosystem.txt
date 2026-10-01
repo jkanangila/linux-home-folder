@@ -17,3 +17,5 @@ Pydantic
 Flet
 Ollama
 Rich
+pyproject
+pathlib

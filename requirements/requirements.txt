@@ -6,3 +6,7 @@ setuptools
 termcolor
 tomlkit
 virtualenv
+jupytext 
+jupyter_client 
+pynvim 
+ipykernel

@@ -1,12 +1,14 @@
 dataclass
 dataclasses
 classmethod
+staticmethod
 abstractmethod
 decorator
 decorators
 ducktyping
 enum
 enums
+isdigit
 strenum
 fixture
 fixtures
