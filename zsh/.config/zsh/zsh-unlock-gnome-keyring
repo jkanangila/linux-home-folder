@@ -1,0 +1,49 @@
+# ==============================================================================
+# Function: unlock_keyring
+# Usage:    unlock_keyring            Unlock an existing keyring
+#           unlock_keyring --create   Create the login keyring (first time only)
+# Description: Prompts for the GNOME Keyring password in silent mode, unlocks
+#              (or creates) the keyring, exports any environment variables the
+#              daemon reports, and clears the password from memory.
+# Requirement: gnome-keyring-daemon
+# Note: Does nothing if the package is not installed.
+# ==============================================================================
+unlock_keyring() {
+  # Bail out quietly if the command is not available
+  (( $+commands[gnome-keyring-daemon] )) || return 0
+
+  local create=0 pw pw2 out line
+  [[ $1 == (-c|--create) ]] && create=1
+  local keyring_file="${XDG_DATA_HOME:-$HOME/.local/share}/keyrings/login.keyring"
+
+  if (( create )); then
+    read -rs "pw?New keyring password: "; echo
+    read -rs "pw2?Confirm password: "; echo
+    if [[ -z $pw || $pw != "$pw2" ]]; then
+      unset pw pw2
+      print -u2 "Password empty or not matching; keyring not created."
+      return 1
+    fi
+    unset pw2
+
+    # Login mode creates the login keyring from the stdin password,
+    # so any running daemon has to be restarted first
+    pkill -x gnome-keyring-d 2>/dev/null
+    out=$(printf '%s' "$pw" | gnome-keyring-daemon --daemonize --login --components=secrets 2>/dev/null)
+  else
+    if [[ ! -f $keyring_file ]]; then
+      print -u2 "No login keyring found. Run: unlock_keyring --create"
+      return 1
+    fi
+    read -rs "pw?Keyring password: "; echo
+    out=$(printf '%s' "$pw" | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)
+    out+=$'\n'$(gnome-keyring-daemon --start --components=secrets 2>/dev/null)
+  fi
+  unset pw
+
+  # Export only VAR=value lines, ignore any other daemon output
+  for line in ${(f)out}; do
+    [[ $line =~ '^[A-Z_]+=' ]] && export "$line"
+  done
+  return 0
+}

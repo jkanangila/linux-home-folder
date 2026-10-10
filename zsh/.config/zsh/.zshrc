@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 #          ╭──────────────────────────────────────────────────────────╮
@@ -16,7 +15,7 @@ setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
 
 # Unbinds the 'Ctrl + S' shortcut, preventing it from accidentally freezing terminal output
-stty stop undef		
+stty stop undef
 
 # Disables text highlighting or formatting quirks when pasting code blocks into the terminal
 zle_highlight=('paste:none')
@@ -24,13 +23,11 @@ zle_highlight=('paste:none')
 # Disables all audio system beeps and alerts entirely to ensure a quiet terminal experience
 unsetopt BEEP
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │      Disable mouse wheel scrolling through history       │
 #          ╰──────────────────────────────────────────────────────────╯
-bindkey -M vicmd -r '^[[A' 
+bindkey -M vicmd -r '^[[A'
 bindkey -M vicmd -r '^[[B'
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │            COMPLETION SYSTEM (COMPINIT) SETUP            │
@@ -51,7 +48,6 @@ compinit
 # Initializes the framework responsible for building dynamic terminal prompts
 promptinit
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │        SMART HISTORY SEARCH SETTINGS (ARROW KEYS)        │
 #          ╰──────────────────────────────────────────────────────────╯
@@ -63,7 +59,6 @@ autoload -U down-line-or-beginning-search
 # Registers these smart search routines as official Zsh Line Editor (ZLE) widgets
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │              VISUAL STYLING & MODULAR FILES              │
@@ -84,6 +79,8 @@ zsh_add_file "zsh-aliases"
 # Clipboard sync helper function
 zsh_add_file "zsh-clip-sync"
 
+# Keyring Unlock Script
+zsh_add_file "zsh-unlock-gnome-keyring"
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │         THIRD-PARTY PLUGIN & EMPOWERMENT LOADING         │
@@ -102,7 +99,6 @@ zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
 # For more plugins: https://github.com/unixorn/awesome-zsh-plugins
 # More completions https://github.com/zsh-users/zsh-completions
-
 
 # Dynamically evaluates and applies the customized user interface prompt theme layout
 zsh_add_starship_prompt

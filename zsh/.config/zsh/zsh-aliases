@@ -5,7 +5,6 @@ alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git
 alias reload="source ~/.zshrc"
 alias vim="nvim"
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │           confirm before overwriting something           │
 #          ╰──────────────────────────────────────────────────────────╯
@@ -13,13 +12,11 @@ alias cp="cp -v"
 alias mv='mv -v'
 alias rm='rm -v'
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                         Colorls                          │
 #          ╰──────────────────────────────────────────────────────────╯
 alias lc="colorls -1A --sd"
 alias lt="colorls -A --sd --tree=3"
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                          pipenv                          │
@@ -28,12 +25,10 @@ alias p="pipenv"
 alias ps="pipenv shell"
 alias pi="pipenv install"
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                          Python                          │
 #          ╰──────────────────────────────────────────────────────────╯
 alias py="python"
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                          Django                          │
@@ -43,19 +38,16 @@ alias dmake="python manage.py makemigrations"
 alias dmi="python manage.py migrate"
 alias dtest="python manage.py test"
 
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                         Services                         │
 #          ╰──────────────────────────────────────────────────────────╯
 alias spst="sudo service postgresql start"
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │                      clear command                       │
 #          ╰──────────────────────────────────────────────────────────╯
 alias cl="clear"
 alias lg='lazygit'
-
 
 #          ╭──────────────────────────────────────────────────────────╮
 #          │         Conditionally add alias to enter chroot          │
@@ -72,3 +64,6 @@ alias lemonade-copy="lemonade copy > /dev/null 2>&1"
 
 # Silence lemonade paste (only allows stdout containing the actual pasted text)
 alias lemonade-paste="lemonade paste 2> /dev/null"
+
+# Run function to unlock_keyring
+alias uk="unlock_keyring"
