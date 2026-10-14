@@ -2,75 +2,89 @@ return {
   "ll931217/jsonlogs.nvim",
   ft = "jsonl",
 
+  -- Register the Which-Key group independently of plugin setup.
+  init = function()
+    require("which-key").add {
+      { "<leader>J", group = "JSON Logs" },
+    }
+  end,
+
   opts = {
     prefix = "<leader>J",
     auto_open = true,
+
+    -- Keep the plugin's native shortcuts at their defaults.
   },
 
   keys = {
     -- ========================================================================
     -- Entry point
     -- ========================================================================
-    { "<leader>Ja", "<cmd>JsonLogs<CR>", desc = "Open JSONL viewer" },
+    {
+      "<leader>Ja",
+      "<cmd>JsonLogs<CR>",
+      desc = "Open JSONL Viewer",
+    },
 
     -- ========================================================================
     -- Navigation
     -- ========================================================================
-    { "<leader>Jn", "j", desc = "Next log entry", remap = true },
-    { "<leader>Jp", "k", desc = "Previous log entry", remap = true },
-    { "<leader>Jg", "gg", desc = "First log entry", remap = true },
-    { "<leader>JG", "G", desc = "Last log entry", remap = true },
-    { "<leader>J]", "]e", desc = "Next error log", remap = true },
-    { "<leader>J[", "[e", desc = "Previous error log", remap = true },
+    { "<leader>Jn", "j", desc = "Next Log Entry", remap = true },
+    { "<leader>Jp", "k", desc = "Previous Log Entry", remap = true },
+    { "<leader>Jg", "gg", desc = "First Log Entry", remap = true },
+    { "<leader>JG", "G", desc = "Last Log Entry", remap = true },
+
+    { "<leader>Je", "]e", desc = "Next Error Log", remap = true },
+    { "<leader>JE", "[e", desc = "Previous Error Log", remap = true },
 
     -- ========================================================================
     -- Pane management
     -- ========================================================================
-    { "<leader>Jt", "<Tab>", desc = "Toggle source/preview pane", remap = true },
-    { "<leader>Jf", "f", desc = "Maximize/restore preview", remap = true },
+    { "<leader>Jt", "<Tab>", desc = "Switch Source / Preview", remap = true },
+    { "<leader>Jf", "f", desc = "Maximize / Restore Preview", remap = true },
 
     -- ========================================================================
     -- Preview actions
     -- ========================================================================
-    { "<leader>J<CR>", "<CR>", desc = "Toggle fold / inspect cell", remap = true },
-    { "<leader>Jy", "y", desc = "Yank formatted JSON", remap = true },
+    { "<leader>J<CR>", "<CR>", desc = "Toggle Fold / Inspect Cell", remap = true },
+    { "<leader>Jy", "y", desc = "Yank Formatted JSON", remap = true },
 
     -- ========================================================================
     -- Bookmarks
     -- ========================================================================
-    { "<leader>Jm", "m", desc = "Bookmark current line", remap = true },
-    { "<leader>Jb", "'", desc = "List bookmarks", remap = true },
+    { "<leader>Jm", "m", desc = "Bookmark Current Entry", remap = true },
+    { "<leader>Jb", "'", desc = "List Bookmarks", remap = true },
 
     -- ========================================================================
-    -- Search and filter
+    -- Search and filtering
     -- ========================================================================
-    { "<leader>Js", "/", desc = "Search by field value", remap = true },
+    { "<leader>Js", "/", desc = "Search by Field Value", remap = true },
 
     -- ========================================================================
     -- Display modes
     -- ========================================================================
-    { "<leader>Jc", "c", desc = "Toggle compact view", remap = true },
-    { "<leader>JT", "T", desc = "Toggle table preview", remap = true },
+    { "<leader>Jc", "c", desc = "Toggle Compact View", remap = true },
+    { "<leader>JT", "T", desc = "Toggle Table Preview", remap = true },
 
     -- ========================================================================
     -- Table pagination
     -- ========================================================================
-    { "<leader>J]", "]", desc = "Next table page", remap = true },
-    { "<leader>J[", "[", desc = "Previous table page", remap = true },
-    { "<leader>J]]", "]]", desc = "Last table page", remap = true },
-    { "<leader>J[[", "[[", desc = "First table page", remap = true },
-    { "<leader>JC", "C", desc = "Open column filter", remap = true },
+    { "<leader>J]", "]", desc = "Next Table Page", remap = true },
+    { "<leader>J[", "[", desc = "Previous Table Page", remap = true },
+    { "<leader>J]]", "]]", desc = "Last Table Page", remap = true },
+    { "<leader>J[[", "[[", desc = "First Table Page", remap = true },
+    { "<leader>JC", "C", desc = "Filter Table Columns", remap = true },
 
     -- ========================================================================
     -- Analysis
     -- ========================================================================
-    { "<leader>Jd", "d", desc = "Mark/show diff", remap = true },
-    { "<leader>Jl", "t", desc = "Toggle live tail", remap = true },
-    { "<leader>Jr", "s", desc = "Show log statistics", remap = true },
+    { "<leader>Jd", "d", desc = "Mark Entry / Show Diff", remap = true },
+    { "<leader>Jl", "t", desc = "Toggle Live Tail", remap = true },
+    { "<leader>Jr", "s", desc = "Show Log Statistics", remap = true },
 
     -- ========================================================================
     -- General
     -- ========================================================================
-    { "<leader>Jq", "q", desc = "Close JSONL viewer", remap = true },
+    { "<leader>Jq", "q", desc = "Close JSONL Viewer", remap = true },
   },
 }
