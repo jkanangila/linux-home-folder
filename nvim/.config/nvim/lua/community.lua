@@ -16,10 +16,20 @@ return {
   { import = "astrocommunity.pack.bash" },
   -- Markdown Language Pack
   { import = "astrocommunity.pack.markdown" },
+  -- Render Markdown inside Neovim
+  { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   -- TOML Language Pack
   { import = "astrocommunity.pack.toml" },
   -- Prettier
   { import = "astrocommunity.pack.prettier" },
   -- JSON Language Pack
   { import = "astrocommunity.pack.json" },
+  -- bars and lines
+  { import = "astrocommunity.bars-and-lines.dropbar-nvim" },
+  -- recipes
+  { import = "astrocommunity.recipes.heirline-nvchad-statusline" },
+  { import = "astrocommunity.recipes.auto-session-restore" },
+  { import = "astrocommunity.recipes.vscode-icons" },
+  -- git
+  { import = "astrocommunity.git.gitgraph-nvim" },
 }
