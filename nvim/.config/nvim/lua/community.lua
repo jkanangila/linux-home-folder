@@ -32,4 +32,6 @@ return {
   { import = "astrocommunity.recipes.vscode-icons" },
   -- git
   { import = "astrocommunity.git.gitgraph-nvim" },
+  -- scrolling
+  { import = "astrocommunity.scrolling.neoscroll-nvim" },
 }
