@@ -103,9 +103,6 @@ zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 # Dynamically evaluates and applies the customized user interface prompt theme layout
 zsh_add_starship_prompt
 
-# Add lsd (colorised ls commands)
-zsh_ensure_lsd
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │         SYSTEM RUNTIME HOOKS & STARTUP EXECUTION         │
 #          ╰──────────────────────────────────────────────────────────╯

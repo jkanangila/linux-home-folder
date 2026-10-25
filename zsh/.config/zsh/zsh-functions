@@ -1,4 +1,3 @@
-
 #          ╭──────────────────────────────────────────────────────────╮
 #          │    ZSH CONFIGURATION MANAGEMENT & AUTOMATION TOOLKIT     │
 #          ╰──────────────────────────────────────────────────────────╯
@@ -22,23 +21,21 @@ function zsh_add_plugin() {
 
     if [[ -d "$plugin_dir" ]]; then
         # Dynamically probe and source the primary plugin entry point script
-        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" || \
-        zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
+        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" ||
+            zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
     else
         echo "Installing plugin: $plugin_name..."
         git clone --depth=1 "https://github.com/$plugin_repo" "$plugin_dir"
-        
+
         # Load the newly cloned plugin instantly
-        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" || \
-        zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
+        zsh_add_file "plugins/$plugin_name/$plugin_name.plugin.zsh" ||
+            zsh_add_file "plugins/$plugin_name/$plugin_name.zsh"
     fi
 }
-
 
 # ╭──────────────────────────────────────────────────────────╮
 # │ 2. PROMPT & ENHANCEMENT MANAGEMENT                       │
 # ╰──────────────────────────────────────────────────────────╯
-
 
 # Dynamically verifies, installs, and initializes the Starship prompt binary
 function zsh_add_starship_prompt() {
@@ -48,14 +45,14 @@ function zsh_add_starship_prompt() {
         eval "$(starship init zsh)"
     else
         echo "🚀 Starship binary missing. Initiating automatic setup on Ubuntu..."
-        
+
         # Ensure the user's local binary storage folder exists physically on disk
         mkdir -p "$HOME/.local/bin"
-        
+
         # Pull down the verified installer, setting destination to user-writable path
         # -y skips confirmation, -b sets binary location avoiding 'sudo' requirement
         curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
-        
+
         # Validate if the newly completed installation was successful
         if command -v starship >/dev/null 2>&1; then
             echo "✅ Starship successfully deployed."
@@ -65,7 +62,6 @@ function zsh_add_starship_prompt() {
         fi
     fi
 }
-
 
 # ╭──────────────────────────────────────────────────────────╮
 # │ 3. AUTOMATIC PIPENV HOOK (WITH SEAMLESS AUTO-EXIT        │
@@ -79,7 +75,7 @@ function auto_pipenv_shell() {
         # Find the path to the virtualenv without spawning a subshell
         local venv_path
         venv_path=$(pipenv --venv 2>/dev/null)
-        
+
         if [[ -n "$venv_path" ]]; then
             echo "💡 Pipfile detected. Activating virtual environment..."
             export PIPENV_SHELL_ORIGIN_DIR="$PWD"
@@ -99,26 +95,16 @@ function auto_pipenv_shell() {
     fi
 }
 
+# ──────────────────────────────────────────────────────────────────────
+# Yazi
+# ──────────────────────────────────────────────────────────────────────
 
-#          ╭──────────────────────────────────────────────────────────╮
-#          │                LSD (Command Line Utility)                │
-#          ╰──────────────────────────────────────────────────────────╯
-# Dynamically verifies and installs the lsd binary using the APT package manager
-function zsh_ensure_lsd() {
-    # Check if the lsd binary is already accessible via the current execution PATH
-    if ! command -v lsd >/dev/null 2>&1; then
-        echo "📦 'lsd' binary missing. Initiating system package manager setup..."
-        echo "💡 This operation requires administrative privileges to run apt."
-        
-        # Refresh local package lists and install the lsd utility cleanly
-        sudo apt update && sudo apt install -y lsd
-        
-        # Validate if the installation was successfully recorded by the system
-        if command -v lsd >/dev/null 2>&1; then
-            echo "✅ 'lsd' successfully deployed via APT."
-        else
-            echo "❌ Error: Package manager installation failed. Please check network or repositories."
-            return 1
-        fi
-    fi
+# Use y instead of yazi. Quit with q to cd into the last directory, or Q to quit without changing it.
+function y() {
+    command -v yazi &>/dev/null || return
+    local tmp="$(mktemp -t yazi-cwd.XXXXXX)" cwd
+    yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd <"$tmp"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
 }
