@@ -1,0 +1,10 @@
+use-colors: true
+show-item-count: true
+show-mtime: true
+no-cross: true
+ignore-dirs:
+  - /proc
+  - /sys
+  - /dev
+  - /run
+  - /mnt

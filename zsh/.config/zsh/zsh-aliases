@@ -67,3 +67,30 @@ alias lemonade-paste="lemonade paste 2> /dev/null"
 
 # Run function to unlock_keyring
 alias uk="unlock_keyring"
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                           lsd                            │
+#          ╰──────────────────────────────────────────────────────────╯
+if command -v lsd >/dev/null; then
+  alias ls='lsd'
+  alias ll='lsd -l --header'
+  alias la='lsd -la --header'
+  alias lt='lsd --tree --depth 2'
+  alias lta='lsd --tree --depth 2 -a'
+  alias lsize='lsd -l --total-size --sort size --reverse'
+fi
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                           btop                           │
+#          ╰──────────────────────────────────────────────────────────╯
+if command -v btop >/dev/null 2>&1; then
+  alias top='btop'
+fi
+
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                           gdu                            │
+#          ╰──────────────────────────────────────────────────────────╯
+if command -v gdu >/dev/null 2>&1; then
+  alias dus='gdu'
+  alias gdux='sudo gdu -x /'
+fi

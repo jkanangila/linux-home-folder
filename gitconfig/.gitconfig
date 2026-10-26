@@ -5,5 +5,6 @@
 	defaultBranch = main
 [core]
 	editor = nvim
+	pager = delta
 [pull]
 	rebase = false

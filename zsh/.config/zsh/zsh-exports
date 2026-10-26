@@ -18,9 +18,13 @@ fi
 PATH="$PATH:$HOME/.local/bin:/usr/bin:/usr/local/bin"
 export PATH
 
+if command -v nvim >/dev/null 2>&1; then
+    export EDITOR="nvim"
+    export VISUAL="nvim"
+fi
+
 # Prevents system manual (man) pages from clipping text or wrapping lines early
 export MANWIDTH=999
-
 
 #           ╭──────────────────────────────────────────────────────────╮
 #           │        PYENV CONFIGURATION (PYTHON VERSION MANAGER)       │
@@ -40,7 +44,6 @@ if [ -d "$HOME/.pyenv" ]; then
     fi
 fi
 
-
 #           ╭──────────────────────────────────────────────────────────╮
 #           │          NVM CONFIGURATION (NODE VERSION MANAGER)        │
 #           ╰──────────────────────────────────────────────────────────╯
@@ -55,7 +58,6 @@ if [ -d "$HOME/.nvm" ]; then
     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 fi
 
-
 #           ╭──────────────────────────────────────────────────────────╮
 #           │      PIPENV CONFIGURATION (PYTHON DEPENDENCY MANAGER)    │
 #           ╰──────────────────────────────────────────────────────────╯
@@ -63,7 +65,6 @@ fi
 if command -v pipenv >/dev/null 2>&1; then
     export PIPENV_VENV_IN_PROJECT=1
 fi
-
 
 #           ╭──────────────────────────────────────────────────────────╮
 #           │         RBENV CONFIGURATION (RUBY VERSION MANAGER)        │
@@ -76,7 +77,6 @@ if [ -d "$HOME/.rbenv" ]; then
         eval "$(rbenv init -)"
     fi
 fi
-
 
 #           ╭──────────────────────────────────────────────────────────╮
 #           │ZOxIDE (a smarter cd command, inspired by z and autojump) │
@@ -91,7 +91,6 @@ if command -v zoxide >/dev/null 2>&1; then
     fi
 fi
 
-
 #           ╭──────────────────────────────────────────────────────────╮
 #           │                        source cargo env                  │
 #           ╰──────────────────────────────────────────────────────────╯
@@ -103,7 +102,6 @@ if [ -d "$HOME/.cargo/bin" ]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-
 #           ╭──────────────────────────────────────────────────────────╮
 #           │                    GOLANG CONFIGURATION                  │
 #           ╰──────────────────────────────────────────────────────────╯
@@ -113,17 +111,22 @@ if command -v go >/dev/null 2>&1; then
     export PATH="$GOPATH/bin:$PATH"
 fi
 
+#          ╭──────────────────────────────────────────────────────────╮
+#          │                       Direnv hook                        │
+#          ╰──────────────────────────────────────────────────────────╯
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
+fi
 
 #           ╭──────────────────────────────────────────────────────────╮
 #           │                     Ollama Config                        │
 #           ╰──────────────────────────────────────────────────────────╯
 export OLLAMA_HOST=http://127.0.0.1:11434
 
-
 #           ╭──────────────────────────────────────────────────────────╮
 #           │          MESA & OPENGL OVERRIDES (WSL / CHROOT)          │
 #           ╰──────────────────────────────────────────────────────────╯
-# Forces Mesa software rendering only when running inside WSL or a Chroot 
+# Forces Mesa software rendering only when running inside WSL or a Chroot
 # AND when Mesa drivers are installed.
 _is_wsl_or_chroot() {
     # Check for WSL via kernel release string or WSL environment variables
@@ -140,9 +143,9 @@ _is_wsl_or_chroot() {
 _has_mesa_installed() {
     # Verify presence of core Mesa/GLES packages via dpkg
     if command -v dpkg >/dev/null 2>&1; then
-        dpkg -s libgles2 >/dev/null 2>&1 || \
-        dpkg -s libgl1-mesa-dri >/dev/null 2>&1 || \
-        dpkg -s libglx-mesa0 >/dev/null 2>&1
+        dpkg -s libgles2 >/dev/null 2>&1 ||
+            dpkg -s libgl1-mesa-dri >/dev/null 2>&1 ||
+            dpkg -s libglx-mesa0 >/dev/null 2>&1
     else
         return 1
     fi
