@@ -1,0 +1,29 @@
+[flags]
+rate = "1s"
+default_time_value = "60s"
+current_usage = true
+group_processes = false
+hide_table_gap = true
+battery = true
+enable_gpu = true
+default_widget_type = "proc"
+
+[[row]]
+  ratio = 30
+  [[row.child]]
+    type = "cpu"
+[[row]]
+  ratio = 35
+  [[row.child]]
+    type = "mem"
+  [[row.child]]
+    type = "net"
+[[row]]
+  ratio = 35
+  [[row.child]]
+    type = "temp"
+  [[row.child]]
+    type = "disk"
+  [[row.child]]
+    type = "proc"
+    default = true
