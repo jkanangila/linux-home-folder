@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WALLPAPER_DIR="${HOME}/Pictures/Wallpapers"
+STATE_DIR="${HOME}/.cache/caelestia"
+STATE_FILE="${STATE_DIR}/last-wallpaper"
+
+mkdir -p "$STATE_DIR"
+
+# Collect supported image files.
+mapfile -d '' wallpapers < <(
+    find "$WALLPAPER_DIR" -maxdepth 1 -type f \
+        \( -iname '*.jpg'  -o -iname '*.jpeg' \
+        -o -iname '*.png'  -o -iname '*.webp' \
+        -o -iname '*.avif' -o -iname '*.bmp' \) \
+        -print0
+)
+
+if ((${#wallpapers[@]} == 0)); then
+    echo "No supported wallpapers found in: $WALLPAPER_DIR" >&2
+    exit 1
+fi
+
+# Prefer a wallpaper other than the previous one.
+previous=""
+if [[ -f "$STATE_FILE" ]]; then
+    IFS= read -r previous < "$STATE_FILE" || true
+fi
+
+candidates=()
+for wallpaper in "${wallpapers[@]}"; do
+    if [[ "$wallpaper" != "$previous" ]]; then
+        candidates+=("$wallpaper")
+    fi
+done
+
+# If there is only one image, allow it to be reused.
+if ((${#candidates[@]} == 0)); then
+    candidates=("${wallpapers[@]}")
+fi
+
+
+# Select one candidate at random without command substitution.
+selected=""
+IFS= read -r -d '' selected < <(
+    printf '%s\0' "${candidates[@]}" | shuf -z -n 1
+) || true
+
+
+# Apply the wallpaper, then reassert dynamic theming.
+caelestia wallpaper -f "$selected"
+caelestia scheme set -n dynamic
+
+# Remember the choice only after both commands succeed.
+printf '%s\n' "$selected" > "$STATE_FILE"
+
+printf 'Wallpaper updated: %s\n' "$selected"

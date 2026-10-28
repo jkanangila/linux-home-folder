@@ -1,0 +1,7 @@
+[Unit]
+Description=Rotate Caelestia wallpaper and update dynamic colors
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/caelestia-wallpaper-rotate
