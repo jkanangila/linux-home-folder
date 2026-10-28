@@ -1,0 +1,41 @@
+{
+  "appearance": {
+    "transparency": {
+      "enabled": true
+    },
+    "rounding": {
+      "scale": 1.0
+    },
+    "spacing": {
+      "scale": 0.85
+    },
+    "padding": {
+      "scale": 0.9
+    },
+    "font": {
+      "scale": 0.75,
+      "clock": "Rubik",
+      "workspaces": "Rubik"
+    }
+  },
+  "background": {
+    "wallpaperEnabled": true
+  },
+  "services": {
+    "clockFormat": "Auto",
+    "dataUnits": "Decimal",
+    "weatherUnits": "Celsius"
+  },
+  "session": {
+    "enabled": true,
+    "icons": {
+      "hibernate": "bedtime"
+    },
+    "commands": {
+      "hibernate": [
+        "systemctl",
+        "hibernate"
+      ]
+    }
+  }
+}
