@@ -34,4 +34,6 @@ return {
   { import = "astrocommunity.git.gitgraph-nvim" },
   -- scrolling
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
+  -- use <leader>ut to toggle transparent mode on/off
+  { import = "astrocommunity.color.transparent-nvim" }
 }
