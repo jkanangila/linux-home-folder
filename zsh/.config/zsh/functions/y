@@ -1,0 +1,11 @@
+# vim: ft=zsh
+# yazi wrapper: quit with `q` to cd into the last directory, `Q` to quit without cd.
+
+(( $+commands[yazi] )) || return
+
+local tmp cwd
+tmp="$(mktemp -t yazi-cwd.XXXXXX)"
+yazi "$@" --cwd-file="$tmp"
+IFS= read -r -d '' cwd <"$tmp"
+[[ -n $cwd && $cwd != $PWD ]] && builtin cd -- "$cwd"
+command rm -f -- "$tmp"

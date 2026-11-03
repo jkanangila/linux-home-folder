@@ -1,0 +1,9 @@
+# vim: ft=zsh
+# Pull the latest commit for every git-cloned plugin in $ZSH_DATA_DIR/plugins.
+
+local dir
+for dir in "$ZSH_DATA_DIR"/plugins/*(N/); do
+  [[ -d $dir/.git ]] || continue
+  print -P "%F{blue}updating%f ${dir:t}"
+  git -C "$dir" pull -q --ff-only
+done

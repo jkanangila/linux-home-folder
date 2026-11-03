@@ -1,0 +1,22 @@
+# vim: ft=zsh
+# Usage: zsh_add_plugin user/repo
+# Clones https://github.com/user/repo into $ZSH_DATA_DIR/plugins on first use,
+# then sources its entry point (<name>.plugin.zsh, falling back to <name>.zsh).
+
+local repo=$1 name=${1:t} dir entry
+dir="$ZSH_DATA_DIR/plugins/$name"
+
+if [[ ! -d $dir ]]; then
+  print -P "%F{yellow}Installing plugin:%f $name"
+  git clone --depth=1 "https://github.com/$repo" "$dir" || return 1
+fi
+
+for entry in "$dir/$name.plugin.zsh" "$dir/$name.zsh"; do
+  if [[ -r $entry ]]; then
+    source "$entry"
+    return 0
+  fi
+done
+
+print -u2 "zsh_add_plugin: no entry point found for $name"
+return 1

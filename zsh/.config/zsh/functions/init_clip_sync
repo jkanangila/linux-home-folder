@@ -1,0 +1,10 @@
+# vim: ft=zsh
+# Termux only: start the Lemonade clipboard server in the background if it
+# isn't already running. Config comes from ~/.config/lemonade.toml.
+
+[[ -n $TERMUX_VERSION || $PREFIX == *com.termux* ]] || return 0
+(( $+commands[lemonade] )) || return 0
+pgrep -x lemonade >/dev/null && return 0
+
+print "Starting Lemonade clipboard server in background..."
+lemonade server >/dev/null 2>&1 &!
