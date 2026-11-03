@@ -1,41 +1,54 @@
 {
-  "appearance": {
-    "transparency": {
-      "enabled": true
+    "appearance": {
+        "font": {
+            "scale": 0.75
+        },
+        "padding": {
+            "scale": 0.9
+        },
+        "rounding": {
+            "scale": 1
+        },
+        "spacing": {
+            "scale": 0.85
+        },
+        "transparency": {
+            "enabled": true
+        }
     },
-    "rounding": {
-      "scale": 1.0
+    "background": {
+        "wallpaperEnabled": true
     },
-    "spacing": {
-      "scale": 0.85
+    "border": {
+        "thickness": 4
     },
-    "padding": {
-      "scale": 0.9
+    "dashboard": {
+        "dragThreshold": 20,
+        "enabled": true
     },
-    "font": {
-      "scale": 0.75,
-      "clock": "Rubik",
-      "workspaces": "Rubik"
+    "general": {
+        "apps": {
+            "audio": [
+                "tauon"
+            ]
+        }
+    },
+    "services": {
+        "clockFormat": "TwentyFourHour",
+        "dataUnits": "Decimal",
+        "defaultPlayer": "strawberry",
+        "weatherUnits": "Celsius"
+    },
+    "session": {
+        "commands": {
+            "hibernate": [
+                "systemctl",
+                "hibernate"
+            ]
+        },
+        "enabled": true,
+        "icons": {
+            "hibernate": "bedtime"
+        }
     }
-  },
-  "background": {
-    "wallpaperEnabled": true
-  },
-  "services": {
-    "clockFormat": "Auto",
-    "dataUnits": "Decimal",
-    "weatherUnits": "Celsius"
-  },
-  "session": {
-    "enabled": true,
-    "icons": {
-      "hibernate": "bedtime"
-    },
-    "commands": {
-      "hibernate": [
-        "systemctl",
-        "hibernate"
-      ]
-    }
-  }
 }

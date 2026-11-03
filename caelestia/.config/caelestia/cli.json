@@ -1,0 +1,74 @@
+{
+  "toggles": {
+    "music": {
+      "tauon": {
+        "enable": true,
+        "match": [
+          {
+            "class": "tauonmb"
+          }
+        ],
+        "command": [
+          "tauon"
+        ],
+        "move": true
+      }
+    },
+    "notes": {
+      "obsidian": {
+        "enable": true,
+        "match": [
+          {
+            "class": "obsidian"
+          }
+        ],
+        "command": [
+          "obsidian"
+        ],
+        "move": true
+      },
+      "simplenote": {
+        "enable": true,
+        "match": [
+          {
+            "class": "simplenote"
+          }
+        ],
+        "command": [
+          "simplenote"
+        ],
+        "move": true
+      }
+    },
+    "communication": {
+      "zapzap": {
+        "enable": true,
+        "match": [
+          {
+            "class": "zapzap"
+          }
+        ],
+        "command": [
+          "zapzap",
+          "run",
+          "com.rtosta.zapzap"
+        ],
+        "move": true
+      }
+    },
+    "files": {
+      "thunar": {
+        "enable": true,
+        "match": [
+          {
+            "class": "thunar"
+          }
+        ],
+        "command": [
+          "thunar"
+        ],
+        "move": true
+      }
+    }
+  }
+}
