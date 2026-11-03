@@ -1,3 +1,0 @@
-# Give background commands up to 2 seconds to finish under emulation
-command_timeout = 2000
-
