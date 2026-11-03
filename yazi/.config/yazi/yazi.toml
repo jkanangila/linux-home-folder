@@ -9,9 +9,12 @@ linemode = "size"
 edit = [{ run = 'nvim %s', desc = "AstroVim", for = "unix", block = true }]
 
 image = [
-  { run = "imv %s1", desc = "Image viewer", for = "linux", orphan = true },
+  { run = "loupe %s1", desc = "Image viewer", for = "linux", orphan = true },
 ]
 
+play = [
+  { run = "tauon %s1", desc = "Tauon Music Box", for = "linux", orphan = true },
+]
 
 extract = [
   { run = "7z x %s1", desc = "Extract here (7-Zip)", block = true, for = "unix" },
@@ -25,16 +28,24 @@ rules = [
     "open",
     "reveal",
   ] },
+
   { mime = "text/*", use = [
     "edit",
     "reveal",
   ] },
+
   { mime = "image/*", use = [
     "image",
     "reveal",
   ] },
-  { mime = "{audio,video}/*", use = [
+
+  { mime = "audio/*", use = [
     "play",
+    "reveal",
+  ] },
+
+  { mime = "video/*", use = [
+    "open",
     "reveal",
   ] },
 
@@ -47,10 +58,12 @@ rules = [
     "edit",
     "reveal",
   ] },
+
   { mime = "inode/empty", use = [
     "edit",
     "reveal",
   ] },
+
   { url = "*", use = [
     "open",
     "reveal",
