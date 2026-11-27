@@ -31,7 +31,7 @@ return {
       config = {
         scratch_repl = true, -- REPL buffer is discarded when closed
         repl_definition = {
-          sh = { command = { "zsh" } },
+          sh = { command = { vim.env.SHELL or "sh" } }, -- was hard-coded zsh
           python = {
             -- use { "uv", "run", "ipython", "--no-autoindent" } to run inside the project venv
             command = { "ipython", "--no-autoindent" },

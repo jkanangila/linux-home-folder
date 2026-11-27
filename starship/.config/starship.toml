@@ -170,7 +170,7 @@ threshold = 70
 style = "italic dimmed yellow"
 
 [git_branch]
-format = " [$branch(:$remote_branch)]($style)"
+format = " $symbol [$branch(:$remote_branch)]($style)"
 symbol = "[△](bold italic bright-blue)"
 style = "italic bright-blue"
 truncation_symbol = "⋯"
@@ -217,10 +217,23 @@ detect_folders = ["node_modules"]
 detect_extensions = []
 
 [python]
-format = " [py](italic) [${symbol}${version}]($style)"
+# format = " [py](italic) [$symbol$version]($style)(-[$virtualenv](bold bright-green))"
+format = '[$symbol$pyenv_prefix$version( \[$virtualenv\])]($style)'
 symbol = "[⌉](bold bright-blue)⌊ "
 version_format = "${raw}"
 style = "bold bright-yellow"
+
+# Replace generic environment names with the parent project name
+generic_venv_names = [".venv", "venv"]
+
+detect_extensions = ["py"]
+detect_files = [
+  "pyproject.toml",
+  "requirements.txt",
+  "Pipfile",
+  "uv.lock",
+  ".python-version",
+]
 
 [ruby]
 format = " [rb](italic) [${symbol}${version}]($style)"
@@ -261,8 +274,8 @@ symbol = "ℂ "
 format = " [$symbol($version(-$name))]($style)"
 
 [conda]
-symbol = "◯ "
-format = " conda [$symbol$environment]($style)"
+disabled = true
+
 
 [dart]
 symbol = "◁◅ "

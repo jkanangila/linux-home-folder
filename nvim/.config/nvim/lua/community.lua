@@ -1,39 +1,39 @@
--- AstroCommunity: import any community modules here
--- We import this file in `lazy_setup.lua` before the `plugins/` folder.
--- This guarantees that the specs are processed before any user plugins.
+-- AstroCommunity: import any community modules here.
+-- Imported in `lazy_setup.lua` before the `plugins/` folder, so these specs are
+-- processed before (and can be overridden by) your own plugin specs.
 
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
+
+  -- Language packs
   { import = "astrocommunity.pack.lua" },
-  -- import/override with your plugins folder
-  { import = "astrocommunity.pack.lua" },
-  -- PYTHON: Base pack with basedpyright and ruff
   { import = "astrocommunity.pack.python.base" },
   { import = "astrocommunity.pack.python.basedpyright" },
   { import = "astrocommunity.pack.python.ruff" },
-  -- Bash
   { import = "astrocommunity.pack.bash" },
-  -- Markdown Language Pack
   { import = "astrocommunity.pack.markdown" },
-  -- Render Markdown inside Neovim
-  { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
-  -- TOML Language Pack
   { import = "astrocommunity.pack.toml" },
-  -- Prettier
-  { import = "astrocommunity.pack.prettier" },
-  -- JSON Language Pack
   { import = "astrocommunity.pack.json" },
-  -- bars and lines
+  { import = "astrocommunity.pack.prettier" },
+
+  -- Markdown rendering inside Neovim
+  { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
+
+  -- Bars and lines
   { import = "astrocommunity.bars-and-lines.dropbar-nvim" },
-  -- recipes
+
+  -- Recipes
   { import = "astrocommunity.recipes.heirline-nvchad-statusline" },
   { import = "astrocommunity.recipes.auto-session-restore" },
   { import = "astrocommunity.recipes.vscode-icons" },
-  -- git
+
+  -- Git
   { import = "astrocommunity.git.gitgraph-nvim" },
-  -- scrolling
+
+  -- Scrolling (disabled on phones in plugins/platform.lua)
   { import = "astrocommunity.scrolling.neoscroll-nvim" },
-  -- use <leader>ut to toggle transparent mode on/off
-  { import = "astrocommunity.color.transparent-nvim" }
+
+  -- <Leader>ut toggles transparent mode
+  { import = "astrocommunity.color.transparent-nvim" },
 }

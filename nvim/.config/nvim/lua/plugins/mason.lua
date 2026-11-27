@@ -1,28 +1,24 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+local env = require "env"
 
--- Customize Mason
+-- Mason's prebuilt binaries are glibc builds and fail on Termux (bionic).
+-- There, install tools with the package manager instead:
+--   pkg install lua-language-server stylua tree-sitter nodejs && npm i -g cspell
+local tools = env.is_termux and {}
+  or {
+    -- language servers
+    "lua-language-server",
+    "jinja-lsp",
+    -- formatters
+    "stylua",
+    -- other
+    "tree-sitter-cli",
+    "cspell",
+  }
 
 ---@type LazySpec
 return {
-  -- use mason-tool-installer for automatically installing Mason packages
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    -- overrides `require("mason-tool-installer").setup(...)`
-    opts = {
-      -- Make sure to use the names found in `:Mason`
-      ensure_installed = {
-        -- install language servers
-        "lua-language-server",
-
-        -- install formatters
-        "stylua",
-
-        -- install debuggers
-        "debugpy",
-
-        -- install any other package
-        "tree-sitter-cli",
-      },
-    },
+    opts = { ensure_installed = tools }, -- names as shown in :Mason
   },
 }

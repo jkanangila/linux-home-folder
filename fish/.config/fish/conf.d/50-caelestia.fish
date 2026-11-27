@@ -3,7 +3,7 @@ status is-interactive; or return
 test -d ~/.local/state/caelestia; or test -d ~/.config/caelestia; or return
 
 # Custom terminal colours
-cat ~/.local/state/caelestia/sequences.txt 2>/dev/null
+command cat ~/.local/state/caelestia/sequences.txt 2>/dev/null
 
 # Jump between prompts in foot
 function mark_prompt_start --on-event fish_prompt

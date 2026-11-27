@@ -2,7 +2,10 @@
 
 local M = {}
 
-local oil = require "oil"
+-- Lazy proxy: requiring this module no longer loads oil.nvim as a side effect.
+local oil = setmetatable({}, {
+  __index = function(_, key) return require("oil")[key] end,
+})
 
 local namespace = vim.api.nvim_create_namespace "oil-cspell"
 

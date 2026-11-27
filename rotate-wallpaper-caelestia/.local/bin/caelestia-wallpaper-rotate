@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
+
+if [[ ! -d "$dir" ]]; then
+    echo "Error: Directory '$dir' does not exist." >&2
+    exit 1
+fi
+
+# Fetch current wallpaper, default to empty if command fails or outputs nothing
+current="$(caelestia wallpaper 2>/dev/null || true)"
+
+# Find files; use null-byte delimiters (-print0 / -z) for safe handling of special characters
+new="$(find "$dir" -type f \
+    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+    ! -path "${current:-/dev/null}" -print0 | shuf -z -n 1 | tr -d '\0')"
+
+if [[ -n "$new" ]]; then
+    caelestia wallpaper -f "$new"
+else
+    echo "No suitable wallpaper found in '$dir'." >&2
+    exit 1
+fi

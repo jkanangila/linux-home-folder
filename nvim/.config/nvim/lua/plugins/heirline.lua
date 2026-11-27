@@ -4,8 +4,7 @@ return {
     opts = function(_, opts)
       local status = require "astroui.status"
 
-      -- Enable partial command/motion rendering inside the statusline (%S)
-      vim.opt.showcmdloc = "statusline"
+      -- showcmdloc = "statusline" is set in astrocore.lua (options.opt)
 
       -- 1. Search count component
       local search_count = status.component.builder {
@@ -36,17 +35,21 @@ return {
       table.insert(opts.statusline, show_cmd)
       table.insert(opts.statusline, line_col_position)
 
-      -- 4. Clock (your custom component at far right)
+      -- 4. Clock (far right). Heirline caches components that have `update`, so a timer fires a
+      -- User event every minute; before this the clock only moved on BufEnter/CursorHold/etc.
+      if not vim.g._heirline_clock_timer then
+        vim.g._heirline_clock_timer = true
+        local function tick() vim.api.nvim_exec_autocmds("User", { pattern = "HeirlineClockTick", modeline = false }) end
+        vim.uv.new_timer():start(60000, 60000, vim.schedule_wrap(tick))
+        vim.api.nvim_create_autocmd("FocusGained", { callback = tick })
+      end
+
       table.insert(
         opts.statusline,
         status.component.builder {
-          provider = function() return " 🕓" .. os.date "%H:%M" end,
-          update = {
-            "FocusGained",
-            "BufEnter",
-            "CursorHold",
-            "ModeChanged",
-          },
+          -- Nerd Font glyph; the 🕓 emoji has unreliable cell width in Termux and other terminals
+          provider = function() return " 󰥔 " .. os.date "%H:%M" end,
+          update = { "User", pattern = "HeirlineClockTick" },
         }
       )
     end,

@@ -1,3 +1,7 @@
+-- lua/polish.lua
+-- Runs after lazy.setup(). Theme hooks must never be able to break startup, hence pcall.
+
+-- Global highlight preferences: italic keywords and comments, everything else upright.
 local italic_groups = {
   "Keyword",
   "@keyword",
@@ -16,28 +20,18 @@ local italic_groups = {
 
 local function apply_italics()
   for _, name in ipairs(italic_groups) do
-    -- Do not create missing highlight groups.
     if vim.fn.hlexists(name) == 1 then
-      local hl = vim.api.nvim_get_hl(0, {
-        name = name,
-        link = false,
-      })
-
+      local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
       hl.italic = true
-
       vim.api.nvim_set_hl(0, name, hl)
     end
   end
 end
 
-local group = vim.api.nvim_create_augroup("custom_italics", {
-  clear = true,
-})
-
 vim.api.nvim_create_autocmd("ColorScheme", {
-  group = group,
+  group = vim.api.nvim_create_augroup("custom_italics", { clear = true }),
   callback = apply_italics,
 })
 
--- Apply after the current colorscheme has loaded.
+-- Apply to whichever colorscheme is currently active.
 apply_italics()

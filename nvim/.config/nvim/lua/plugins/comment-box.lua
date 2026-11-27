@@ -1,13 +1,14 @@
 return {
   "LudoPinelli/comment-box.nvim",
-  lazy = false,
 
-  config = function()
-    -- Register the group using the Which-Key v3 API.
-    require("which-key").add {
-      { "<leader>B", group = "Comment Boxes" },
-    }
-  end,
+  -- Registered through AstroCore so the group label exists before the plugin loads;
+  -- that is what made `lazy = false` + a which-key config necessary before.
+  specs = {
+    {
+      "AstroNvim/astrocore",
+      opts = { mappings = { n = { ["<Leader>B"] = { desc = "Comment Boxes" } } } },
+    },
+  },
 
   keys = {
     -- ============================================================
@@ -49,9 +50,9 @@ return {
     -- Simple lines
     -- ============================================================
 
-    { "<leader>Bl", "<cmd>CBline<cr>", mode = "n", desc = "Simple Line (Left)" },
-    { "<leader>Bc", "<cmd>CBcline<cr>", mode = "n", desc = "Simple Line (Center)" },
-    { "<leader>Br", "<cmd>CBrline<cr>", mode = "n", desc = "Simple Line (Right)" },
+    { "<leader>B-l", "<cmd>CBline<cr>", mode = "n", desc = "Simple Line (Left)" },
+    { "<leader>B-c", "<cmd>CBcline<cr>", mode = "n", desc = "Simple Line (Center)" },
+    { "<leader>B-r", "<cmd>CBrline<cr>", mode = "n", desc = "Simple Line (Right)" },
 
     -- ============================================================
     -- Utilities

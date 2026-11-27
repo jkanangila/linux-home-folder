@@ -1,69 +1,54 @@
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
--- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
---       as this provides autocomplete and documentation while editing
+
+local env = require "env"
 
 ---@type LazySpec
 return {
   "AstroNvim/astrolsp",
   ---@type AstroLSPOpts
   opts = {
-    -- Configuration table of features provided by AstroLSP
     features = {
-      codelens = true, -- enable/disable codelens refresh on start
-      inlay_hints = false, -- enable/disable inlay hints on start
-      semantic_tokens = true, -- enable/disable semantic token highlighting
+      codelens = true,
+      inlay_hints = false,
+      semantic_tokens = true,
     },
-    -- customize lsp formatting options
     formatting = {
       format_on_save = {
         enabled = true,
         ignore_filetypes = {},
       },
       disabled = {},
-      timeout_ms = 120000,
+      -- Was 120000 (2 minutes): a hung formatter froze :w that long.
+      timeout_ms = env.is_mobile and 30000 or 10000,
     },
-    -- Explicitly tell AstroLSP to look for these servers
     servers = { "basedpyright", "ruff", "jinja_lsp" },
-    -- customize language server configuration passed to `vim.lsp.config`
     config = {
-      -- ─── RUFF CONFIGURATION ────────────────────────────────────────────────
       ruff = {
-        on_attach = function(client, _)
-          -- Disable Ruff's hover capability so it doesn't conflict with Basedpyright
-          if client.name == "ruff" then client.server_capabilities.hoverProvider = false end
+        on_attach = function(client)
+          -- Let basedpyright own hover
+          client.server_capabilities.hoverProvider = false
         end,
-        init_options = {
-          settings = {
-            -- Any extra CLI arguments you want to pass to ruff can go here
-            args = {},
+      },
+      basedpyright = {
+        capabilities = {
+          workspace = {
+            -- Dynamic file watching is expensive on phones (low inotify limits, slow storage)
+            didChangeWatchedFiles = { dynamicRegistration = not env.is_mobile },
           },
         },
-      },
-      -- ─── BASEDPYRIGHT CONFIGURATION ────────────────────────────────────────
-      basedpyright = {
-        -- ─── CRITICAL FIX FOR FILE OPERATIONS ─────────────────────────────────
-        capabilities = vim.tbl_deep_extend("force", {
-          workspace = {
-            didChangeWatchedFiles = {
-              dynamicRegistration = true,
-            },
-          },
-        }, package.loaded["lsp-file-operations"] and require("lsp-file-operations").default_config() or {}),
-        -- ──────────────────────────────────────────────────────────────────────
         settings = {
           basedpyright = {
-            -- Disable duplicate features handled by Ruff
+            -- Ruff handles import sorting
             disableOrganizeImports = true,
             analysis = {
-              diagnosticMode = "workspace",
+              diagnosticMode = env.is_mobile and "openFilesOnly" or "workspace",
               useLibraryCodeForTypes = true,
-              typeCheckingMode = "standard",
+              typeCheckingMode = "standard", -- pyproject.toml overrides this per project
               strictDictionaryInference = true,
-
               diagnosticSeverityOverrides = {
                 reportGeneralTypeIssues = "error",
-                -- Let Ruff handle unused imports/variables cleanly without duplicate diagnostics
+                -- Ruff reports these; avoid duplicate diagnostics
                 reportUnusedImport = "none",
                 reportUnusedVariable = "none",
                 reportUnusedClass = "none",
@@ -77,7 +62,6 @@ return {
         filetypes = { "jinja" },
       },
     },
-    handlers = {},
     autocmds = {
       lsp_codelens_refresh = {
         cond = "textDocument/codeLens",
@@ -106,6 +90,5 @@ return {
         },
       },
     },
-    on_attach = function(client, bufnr) end,
   },
 }

@@ -6,8 +6,24 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
-    lazy = false,
     opts = {},
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            -- Normal mode mappings
+            n = {
+              ["<Leader>r"] = { desc = "Refactoring" },
+            },
+            -- Visual mode mappings
+            v = {
+              ["<Leader>r"] = { desc = "Refactoring" },
+            },
+          },
+        },
+      },
+    },
     keys = {
       {
         "<leader>re",

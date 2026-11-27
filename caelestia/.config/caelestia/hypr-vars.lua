@@ -10,7 +10,7 @@ return {
 
 	-- Material You-inspired window styling
 	blurEnabled = true,
-	blurSpecialWs = false,
+	blurSpecialWs = true,
 	blurPopups = true,
 	blurSize = 6,
 	blurPasses = 2,
@@ -21,9 +21,9 @@ return {
 
 	-- Comfortable on a 1366x768 display
 	workspaceGaps = 12,
-	windowGapsIn = 4,
-	windowGapsOut = 6,
-	singleWindowGapsOut = 8,
+	windowGapsIn = 1,
+	windowGapsOut = 4,
+	singleWindowGapsOut = 4,
 
 	-- Rounded, subtly translucent windows
 	windowOpacity = 1.0,

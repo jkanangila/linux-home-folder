@@ -1,6 +1,6 @@
 [Unit]
 Description=Rotate Caelestia wallpaper and update dynamic colors
-After=graphical-session.target
+PartOf=graphical-session.target
 
 [Service]
 Type=oneshot

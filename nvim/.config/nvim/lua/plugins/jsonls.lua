@@ -1,3 +1,6 @@
+local cspell_schema = vim.uri_from_fname(vim.fn.stdpath "config" .. "/schemas/cspell.schema.json")
+
+---@type LazySpec
 return {
   "AstroNvim/astrolsp",
   opts = {
@@ -7,11 +10,8 @@ return {
           json = {
             schemas = {
               {
-                fileMatch = {
-                  ".cspell.json",
-                  "cspell.json",
-                },
-                url = "file://" .. vim.fn.expand "~/.config/nvim/schemas/cspell.schema.json",
+                fileMatch = { ".cspell.json", "cspell.json" },
+                url = cspell_schema,
               },
             },
           },

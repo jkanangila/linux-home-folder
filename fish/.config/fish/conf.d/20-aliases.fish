@@ -20,6 +20,10 @@ if type -q nvim
     abbr -a vim 'nvim'
 end
 
+if type -q bat
+    alias cat 'bat'
+end
+
 # ── Directory listing: eza / lsd / ls ─────────────────────────
 
 if type -q eza
@@ -28,6 +32,8 @@ if type -q eza
     abbr -a l 'ls'
     abbr -a ll 'ls -l'
     abbr -a la 'ls -a'
+    abbr -a lt 'ls --tree --level 1'
+    abbr -a lta 'ls -a --tree --level 1'
     abbr -a lla 'ls -la'
 
 else if type -q lsd
@@ -163,3 +169,36 @@ if type -q uv
 
 end
 
+
+# ── Ollama ────────────────────────────────────────────────────────────
+
+if type -q ollama
+
+    abbr -a ol 'ollama'
+    abbr -a ols 'ollama serve'
+
+    # Service management
+    abbr -a olstart 'systemctl --user start ollama'
+    abbr -a olstop 'systemctl --user stop ollama'
+    abbr -a olrestart 'systemctl --user restart ollama'
+    abbr -a olstatus 'systemctl --user status ollama'
+    abbr -a ollogs 'journalctl --user -u ollama -f'
+
+    # Models
+    abbr -a ollist 'ollama list'
+    abbr -a olps 'ollama ps'
+    abbr -a olpull 'ollama pull'
+    abbr -a olrm 'ollama rm'
+    abbr -a olshow 'ollama show'
+    abbr -a olrun 'ollama run'
+
+    # API
+    abbr -a olapi 'curl -s http://127.0.0.1:11434/api/tags'
+
+end
+
+# ── Pc Info ───────────────────────────────────────────────────────────
+
+if type -q inxi
+    abbr -a pcinfo 'inxi -Fxxxz'
+end

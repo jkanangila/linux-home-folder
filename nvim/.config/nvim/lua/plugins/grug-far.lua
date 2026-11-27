@@ -1,5 +1,6 @@
 return {
   "MagicDuck/grug-far.nvim",
+  cmd = { "GrugFar", "GrugFarWithin" }, -- the <cmd>GrugFar<cr> mappings below need this
   ---@type GrugFarOptions
   opts = {
     -- Overriding the buffer-local keymaps active inside the GrugFar UI buffer

@@ -54,3 +54,16 @@ hl.window_rule({
 	match = { class = "^(thunar)$" },
 	workspace = "special:files",
 })
+
+-- ==========================================
+-- Decoration & Blur Overrides
+-- ==========================================
+
+-- hl.config({
+-- 	decoration = {
+-- 		blur = {
+-- 			new_optimizations = true,
+-- 			vibrancy = 0.2,
+-- 		},
+-- 	},
+-- })

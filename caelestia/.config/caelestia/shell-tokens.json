@@ -1,0 +1,12 @@
+{
+  "appearance": {
+    "fontSize": {
+      "small": 11,
+      "smaller": 12,
+      "normal": 14,
+      "larger": 16,
+      "large": 19,
+      "extraLarge": 26
+    }
+  }
+}

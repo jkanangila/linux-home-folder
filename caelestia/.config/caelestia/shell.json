@@ -1,54 +1,115 @@
 {
-    "appearance": {
-        "font": {
-            "scale": 0.75
-        },
-        "padding": {
-            "scale": 0.9
-        },
-        "rounding": {
-            "scale": 1
-        },
-        "spacing": {
-            "scale": 0.85
-        },
-        "transparency": {
-            "enabled": true
-        }
+  "appearance": {
+    "font": {
+      "scale": 0.75
     },
-    "background": {
-        "wallpaperEnabled": true
+    "padding": {
+      "scale": 0.9
     },
-    "border": {
-        "thickness": 4
+    "rounding": {
+      "scale": 1
     },
-    "dashboard": {
-        "dragThreshold": 20,
-        "enabled": true
+    "spacing": {
+      "scale": 0.85
     },
-    "general": {
-        "apps": {
-            "audio": [
-                "tauon"
-            ]
-        }
-    },
-    "services": {
-        "clockFormat": "TwentyFourHour",
-        "dataUnits": "Decimal",
-        "defaultPlayer": "strawberry",
-        "weatherUnits": "Celsius"
-    },
-    "session": {
-        "commands": {
-            "hibernate": [
-                "systemctl",
-                "hibernate"
-            ]
-        },
-        "enabled": true,
-        "icons": {
-            "hibernate": "bedtime"
-        }
+    "transparency": {
+      "enabled": true
     }
+  },
+  "background": {
+    "wallpaperEnabled": true
+  },
+  "bar": {
+    "activeWindow": {
+      "showOnHover": false
+    },
+    "clock": {
+      "background": false,
+      "showDate": false
+    },
+    "persistent": false,
+    "popouts": {
+      "activeWindow": false,
+      "tray": false
+    },
+    "statusIcons": [
+      {
+        "enabled": true,
+        "id": "lockStatus"
+      },
+      {
+        "enabled": false,
+        "id": "audio"
+      },
+      {
+        "enabled": false,
+        "id": "microphone"
+      },
+      {
+        "enabled": true,
+        "id": "kbLayout"
+      },
+      {
+        "enabled": true,
+        "id": "network"
+      },
+      {
+        "enabled": true,
+        "id": "bluetooth"
+      },
+      {
+        "enabled": true,
+        "id": "battery"
+      }
+    ],
+    "tray": {
+      "background": false
+    },
+    "workspaces": {
+      "activeTrail": true,
+      "occupiedBg": false
+    }
+  },
+  "border": {
+    "thickness": 4
+  },
+  "dashboard": {
+    "dragThreshold": 20,
+    "enabled": true
+  },
+  "general": {
+    "apps": {
+      "audio": ["tauon"]
+    },
+    "idle": {
+      "lockBeforeSleep": false,
+      "inhibitWhenAudio": false,
+      "timeouts": []
+    }
+  },
+  "launcher": {
+    "enabled": true,
+    "showOnHover": false,
+    "useFuzzy": {
+      "schemes": false
+    }
+  },
+  "services": {
+    "clockFormat": "TwentyFourHour",
+    "dataUnits": "Decimal",
+    "defaultPlayer": "strawberry",
+    "weatherUnits": "Celsius"
+  },
+  "session": {
+    "commands": {
+      "hibernate": ["systemctl", "hibernate"]
+    },
+    "enabled": true,
+    "icons": {
+      "hibernate": "bedtime"
+    }
+  },
+  "sidebar": {
+    "enabled": true
+  }
 }
